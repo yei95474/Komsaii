@@ -61,12 +61,12 @@ int main()
         printf("Insufficient unique numbers\n");
     }
     
-    int pang_index_rani_bruh_kapoynako = second_highest, index=-1;
+    int index=-1;
 
     for (int i=0; /*Kapoynakogang*/i<size;i++) {
-        if (arr[i]==pang_index_rani_bruh_kapoynako) {
+        if (arr[i]==second_highest) {
             index=i;
-            break; /*niggaaaaaaaaaa*/
+            break; /*haha*/
         }
     }
 
