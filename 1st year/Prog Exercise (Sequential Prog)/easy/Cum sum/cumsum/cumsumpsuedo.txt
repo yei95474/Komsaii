@@ -1,0 +1,8 @@
+Data n, size, ctr=1, sumf=0
+Input size
+While ctr <= size
+    Input n
+    sumf = sumf + n
+    ctr = ctr + 1
+Display sumf
+end
