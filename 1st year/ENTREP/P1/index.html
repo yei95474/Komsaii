@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DCST Room Booking - Department of Computer Science and Technology</title>
+    <!-- Load Tailwind CSS from CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Inter font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        /* Custom CSS to define color palette variables and set up fonts */
+        :root {
+            --color-primary-darkest: #03045e; /* Dark Blue Background */
+            --color-primary-dark: #0077b6;    /* Dark Blue Accent */
+            --color-primary-medium: #00b4d8;  /* Medium Blue Accent */
+            --color-primary-light: #90e0ef;   /* Light Blue Accent */
+            --color-primary-lightest: #caf0f8; /* Lightest Blue Text/Accent */
+            --color-success: #34d399; /* Tailwind green-400 */
+            --color-danger: #ef4444; /* Tailwind red-500 */
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-primary-darkest);
+            color: white;
+            min-height: 100vh;
+        }
+
+        /* Hero Section Styling to mimic the image's background */
+        #hero-section {
+            background-image: url('https://images.unsplash.com/photo-1541888944520-22c7a0c10b71?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); /* Unsplash placeholder for a building/campus */
+            background-size: cover;
+            background-position: center;
+            height: 300px; /* Adjusted height for better fit */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--color-primary-dark);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--color-primary-medium);
+        }
+        
+        /* Utility class for button styling using the color scheme */
+        .nav-btn {
+            background-color: transparent;
+            color: var(--color-primary-lightest);
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        .nav-btn:hover {
+            background-color: var(--color-primary-dark);
+            color: white;
+        }
+        .primary-btn {
+            background-color: var(--color-primary-dark);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            transition: background-color 0.2s;
+            font-weight: 600;
+        }
+        .primary-btn:hover {
+            background-color: var(--color-primary-medium);
+        }
+    </style>
+</head>
+<body class="selection:bg-cyan-500 selection:text-white">
+
+    <!-- Main Application Container -->
+    <div id="app" class="flex flex-col min-h-screen">
+
+        <!-- Login Screen - Initially Visible -->
+        <div id="login-screen" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-95 z-50">
+            <div class="p-8 md:p-12 max-w-lg w-full bg-white text-gray-800 rounded-xl shadow-2xl transition duration-500 transform hover:scale-[1.02]">
+                <h2 class="text-3xl font-extrabold text-center mb-6 text-gray-900">DCST Login</h2>
+                <p class="text-center text-sm mb-8 text-gray-500">Use **admin** for both username and password for static access.</p>
+                <div id="login-error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 hidden" role="alert">
+                    <strong class="font-bold">Error!</strong>
+                    <span class="block sm:inline"> Invalid credentials.</span>
+                </div>
+                <form id="login-form" class="space-y-6">
+                    <div>
+                        <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+                        <input type="text" id="username" name="username" class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-cyan-500 focus:border-cyan-500" placeholder="admin" required>
+                    </div>
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                        <input type="password" id="password" name="password" class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-cyan-500 focus:border-cyan-500" placeholder="admin" required>
+                    </div>
+                    <div>
+                        <button type="submit" class="w-full primary-btn mt-4 text-lg">Sign In</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Header/Navigation Bar - Hidden until logged in -->
+        <header id="main-header" class="hidden sticky top-0 z-40 bg-[var(--color-primary-darkest)] bg-opacity-95 backdrop-blur-sm shadow-lg border-b border-[var(--color-primary-dark)]">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
+                <!-- Logo/Title -->
+                <div class="flex items-center space-x-3">
+                    <span class="text-2xl font-bold text-[var(--color-primary-light)]">DCST Booking</span>
+                </div>
+                
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex space-x-2">
+                    <!-- Buttons for other pages - functionality is to show a placeholder modal/alert -->
+                    <button class="nav-btn" onclick="showModal('Rooms Page')">Rooms</button>
+                    <button class="nav-btn" onclick="showModal('Resources Page')">Resources</button>
+                    <button class="nav-btn" onclick="showModal('Pricing Information')">Pricing</button>
+                    <button class="nav-btn" onclick="showModal('Contact Information')">Contact</button>
+                    <button class="nav-btn" onclick="showModal('External Link Placeholder')">Link</button>
+                </nav>
+
+                <!-- Auth Buttons -->
+                <div class="flex items-center space-x-2">
+                    <button id="sign-out-btn" class="nav-btn bg-[var(--color-primary-dark)] hover:bg-[var(--color-primary-medium)]">Sign Out</button>
+                    <button id="register-btn" class="nav-btn hidden" onclick="showModal('Registration Page')">Register</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Area - Hidden until logged in -->
+        <main id="main-content" class="flex-grow hidden">
+            
+            <!-- Hero Section -->
+            <section id="hero-section" class="relative">
+                <div class="absolute inset-0 bg-black opacity-40"></div>
+                <h1 class="relative text-5xl font-extrabold tracking-widest text-white">DCST</h1>
+            </section>
+
+            <!-- Room Selection Section -->
+            <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-16">
+                <h2 class="text-2xl md:text-3xl font-bold text-white mb-2">DCST Room Selection</h2>
+                <p class="text-lg font-light text-[var(--color-primary-light)] mb-10">Please choose a room to view details or proceed to booking.</p>
+
+                <!-- Room Cards Container -->
+                <div id="room-list-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Room Cards will be injected here by JavaScript -->
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer id="main-footer" class="hidden bg-[var(--color-primary-darkest)] border-t border-[var(--color-primary-dark)] py-10 mt-auto">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                    <!-- Logo Section -->
+                    <div class="col-span-2 md:col-span-1">
+                        <div class="flex items-center mb-4">
+                            <!-- Placeholder for logo icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-[var(--color-primary-light)] mr-3" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L1 21h22L12 2zm0 18L5.27 8.5h13.46L12 20z"/></svg>
+                            <span class="text-xl font-bold text-[var(--color-primary-lightest)]">DCST</span>
+                        </div>
+                        <p class="text-sm text-[var(--color-primary-light)]">Department of Computer Science and Technology.</p>
+                    </div>
+
+                    <!-- Use Cases -->
+                    <div>
+                        <h4 class="text-lg font-semibold mb-4 text-[var(--color-primary-medium)]">Use Cases</h4>
+                        <ul class="space-y-2 text-sm text-[var(--color-primary-light)]">
+                            <li>UI design</li>
+                            <li>UX design</li>
+                            <li>Wireframing</li>
+                            <li>Programming</li>
+                            <li>Brainstorming</li>
+                            <li>Team collaboration</li>
+                        </ul>
+                    </div>
+
+                    <!-- Resources -->
+                    <div>
+                        <h4 class="text-lg font-semibold mb-4 text-[var(--color-primary-medium)]">Resources</h4>
+                        <ul class="space-y-2 text-sm text-[var(--color-primary-light)]">
+                            <li>Design</li>
+                            <li>Prototyping</li>
+                            <li>Development features</li>
+                            <li>Design systems</li>
+                            <li>Collaboration features</li>
+                            <li>Design process</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Modal for placeholder content -->
+        <div id="placeholder-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 hidden p-4" onclick="closeModal(this)">
+            <div class="bg-white p-8 rounded-xl shadow-2xl max-w-lg w-full text-gray-800" onclick="event.stopPropagation()">
+                <h3 id="modal-title" class="text-2xl font-bold mb-4 text-[var(--color-primary-dark)]">Page Title</h3>
+                <p id="modal-content" class="text-gray-700">
+                    This is a placeholder for the requested page/feature. The core functionality of the room listing and booking details is implemented on the main screen.
+                </p>
+                <button class="primary-btn mt-6" onclick="closeModal(document.getElementById('placeholder-modal'))">Close</button>
+            </div>
+        </div>
+
+        <!-- Room Details Right Sidebar - New Element for "collapse to the right" -->
+        <div id="room-details-sidebar" class="fixed top-0 right-0 w-full md:w-96 h-full bg-gray-900 z-50 transform translate-x-full transition-transform duration-500 overflow-y-auto shadow-2xl">
+            <!-- Close Button -->
+            <button onclick="closeRoomDetailsSidebar()" class="absolute top-4 right-4 text-gray-300 hover:text-white transition z-50 p-2 rounded-full hover:bg-gray-800">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            
+            <div class="p-6">
+                <!-- Content will be loaded dynamically -->
+                <h2 id="sidebar-room-name" class="text-3xl font-bold text-[var(--color-primary-medium)] mb-4 mt-8"></h2>
+                
+                <!-- Status and Capacity -->
+                <div id="sidebar-status" class="flex items-center space-x-2 text-lg font-semibold mb-6 border-b border-gray-700 pb-4"></div>
+                
+                <img id="sidebar-image" src="" alt="Room Image" class="w-full h-40 object-cover rounded-lg mb-6 shadow-lg" onerror="this.onerror=null;this.src='https://placehold.co/400x160/00b4d8/white?text=DCST'">
+
+                <h3 class="text-xl font-semibold text-white mb-3">Capacity & Features</h3>
+                <div id="sidebar-features" class="space-y-2 text-sm text-gray-300 mb-6"></div>
+
+                <h3 class="text-xl font-semibold text-white mb-3">Today's Schedule</h3>
+                <ul id="sidebar-bookings" class="space-y-2 mb-6"></ul>
+                
+                <h3 class="text-xl font-semibold text-white mb-3">Contact Information</h3>
+                <p id="sidebar-contact" class="text-sm text-gray-300 mb-8 p-3 bg-gray-800 rounded-lg"></p>
+
+                <button id="sidebar-book-btn" class="primary-btn w-full text-lg">Request Booking</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- JavaScript Logic -->
+    <script>
+        // --- DATA DEFINITION ---
+        const initialRooms = [
+            // List of pre-defined rooms in the DCST building
+            { 
+                id: 103, 
+                name: "Room 103 (Lecture Hall)", 
+                available: true, 
+                capacity: 80, 
+                features: ["Projector", "AC", "WiFi", "Sound System"], 
+                contact: "Contact Engr. Dela Cruz at ext. 301 for bookings.",
+                imageUrl: "https://images.unsplash.com/photo-1628151020054-07d4b476e339?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", 
+                bookings: [
+                    { time: "8:00 AM - 10:00 AM", status: "Booked (Dr. Cruz)" }, 
+                    { time: "10:00 AM - 12:00 PM", status: "Open" },
+                    { time: "1:00 PM - 3:00 PM", status: "Booked (CS 101)" }
+                ] 
+            },
+            { 
+                id: 104, 
+                name: "Room 104 (Lab 1)", 
+                available: false, 
+                capacity: 40, 
+                features: ["20 Workstations", "Linux OS", "Ethernet Ports", "Whiteboard"], 
+                contact: "Contact Ms. Perez at ext. 302 for technical assistance.",
+                imageUrl: "https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", 
+                bookings: [
+                    { time: "10:00 AM - 12:00 PM", status: "Booked (CS 201)" }, 
+                    { time: "1:00 PM - 3:00 PM", status: "Booked (CS 202)" }
+                ] 
+            },
+            { 
+                id: 105, 
+                name: "Room 105 (Seminar)", 
+                available: true, 
+                capacity: 50, 
+                features: ["Video Conferencing", "Adjustable Seating", "High Speed WiFi"], 
+                contact: "Contact the DCST Secretary at ext. 305.",
+                imageUrl: "https://images.unsplash.com/photo-1557804506-669f9829f7f4?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", 
+                bookings: [
+                    { time: "9:00 AM - 11:00 AM", status: "Open" }, 
+                    { time: "11:00 AM - 1:00 PM", status: "Booked (Dr. Santos)" }
+                ] 
+            },
+            { 
+                id: 106, 
+                name: "Room 106 (Lab 2)", 
+                available: true, 
+                capacity: 40, 
+                features: ["20 Workstations", "Windows OS", "4K Monitor", "HVAC"], 
+                contact: "Contact Engr. Dela Cruz at ext. 301 for bookings.",
+                imageUrl: "https://images.unsplash.com/photo-1596495578051-a92c3032506e?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", 
+                bookings: [
+                    { time: "2:00 PM - 4:00 PM", status: "Open" }, 
+                    { time: "4:00 PM - 6:00 PM", status: "Open" }
+                ] 
+            },
+            { 
+                id: 107, 
+                name: "Room 107 (Discussion)", 
+                available: false, 
+                capacity: 15, 
+                features: ["Comfortable Seating", "Large Display Screen", "Sound Proofing"], 
+                contact: "Contact Ms. Perez at ext. 302 for assistance.",
+                imageUrl: "https://images.unsplash.com/photo-1555431664-90a612052136?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", 
+                bookings: [
+                    { time: "9:00 AM - 11:00 AM", status: "Booked (Dr. Reyes)" }, 
+                    { time: "11:00 AM - 1:00 PM", status: "Booked (CS 305)" }
+                ] 
+            },
+        ];
+
+        // --- DOM ELEMENTS AND CONSTANTS ---
+        const loginScreen = document.getElementById('login-screen');
+        const loginForm = document.getElementById('login-form');
+        const loginError = document.getElementById('login-error');
+        const mainHeader = document.getElementById('main-header');
+        const mainContent = document.getElementById('main-content');
+        const mainFooter = document.getElementById('main-footer');
+        const roomListContainer = document.getElementById('room-list-container');
+        const signOutBtn = document.getElementById('sign-out-btn');
+        
+        // DOM ELEMENTS FOR SIDEBAR
+        const roomDetailsSidebar = document.getElementById('room-details-sidebar');
+        const sidebarRoomName = document.getElementById('sidebar-room-name');
+        const sidebarStatus = document.getElementById('sidebar-status');
+        const sidebarImage = document.getElementById('sidebar-image');
+        const sidebarFeatures = document.getElementById('sidebar-features');
+        const sidebarBookings = document.getElementById('sidebar-bookings');
+        const sidebarContact = document.getElementById('sidebar-contact');
+        const sidebarBookBtn = document.getElementById('sidebar-book-btn');
+
+        const ADMIN_USERNAME = 'admin';
+        const ADMIN_PASSWORD = 'admin';
+        const STORAGE_KEY_LOGGED_IN = 'dcst_is_logged_in';
+
+        // --- AUTHENTICATION FUNCTIONS ---
+
+        // Function to check login status from localStorage
+        function checkLoginStatus() {
+            // Check if the user is already marked as logged in
+            const isLoggedIn = localStorage.getItem(STORAGE_KEY_LOGGED_IN) === 'true';
+            if (isLoggedIn) {
+                showMainApp();
+            } else {
+                showLoginScreen();
+            }
+        }
+
+        // Function to display the login screen
+        function showLoginScreen() {
+            loginScreen.classList.remove('hidden');
+            mainHeader.classList.add('hidden');
+            mainContent.classList.add('hidden');
+            mainFooter.classList.add('hidden');
+        }
+
+        // Function to display the main application content
+        function showMainApp() {
+            loginScreen.classList.add('hidden');
+            mainHeader.classList.remove('hidden');
+            mainContent.classList.remove('hidden');
+            mainFooter.classList.remove('hidden');
+            renderRoomCards(); // Render rooms after successful login
+        }
+
+        // Event listener for the static login form submission
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Static authentication check (username: admin, password: admin)
+            if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+                localStorage.setItem(STORAGE_KEY_LOGGED_IN, 'true');
+                loginError.classList.add('hidden');
+                showMainApp();
+            } else {
+                // Show error message for invalid credentials
+                loginError.classList.remove('hidden');
+                console.error("Login failed: Invalid credentials.");
+            }
+        });
+
+        // Event listener for the sign out button
+        signOutBtn.addEventListener('click', function() {
+            // Clear login state and show login screen
+            localStorage.removeItem(STORAGE_KEY_LOGGED_IN);
+            showLoginScreen();
+        });
+
+        // --- ROOM RENDERING FUNCTIONS ---
+
+        // Function to render the booking status list for a room
+        function renderBookingList(bookings) {
+            return bookings.map(b => {
+                const isBooked = b.status.includes('Booked');
+                const statusColor = isBooked ? 'text-red-400' : 'text-green-400';
+                return `<li class="flex justify-between text-sm text-gray-300">
+                            <span class="font-medium text-white">${b.time}</span> 
+                            <span class="${statusColor} font-semibold">${b.status}</span>
+                        </li>`;
+            }).join('');
+        }
+        
+        // Function to render the features list for the sidebar
+        function renderFeaturesList(features) {
+            // Generates a list of features with a checkmark icon
+            return features.map(f => `
+                <p class="font-bold text-white flex items-center">
+                    <svg class="w-4 h-4 mr-2 text-[var(--color-primary-light)] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    ${f}
+                </p>
+            `).join('');
+        }
+
+        // Function to generate the HTML for a single room card
+        function createRoomCard(room) {
+            // Determine colors and text for the availability indicator
+            const statusColor = room.available ? 'bg-green-500' : 'bg-red-500';
+            const statusText = room.available ? 'Available' : 'Booked';
+
+            // HTML structure for the room card (now click to open sidebar to the right)
+            return `
+                <div class="room-card bg-gray-800 rounded-xl shadow-2xl transition duration-300 hover:shadow-cyan-500/50 overflow-hidden cursor-pointer" 
+                     data-room-id="${room.id}"
+                     onclick="openRoomDetailsSidebar(${room.id})">
+                    
+                    <!-- Main Card Content -->
+                    <div class="p-4 transition duration-200 hover:bg-gray-700/50">
+                        
+                        <div class="flex items-center space-x-4">
+                            <!-- Room Image (Placeholder) -->
+                            <img src="${room.imageUrl}" alt="${room.name}" 
+                                 class="w-20 h-20 object-cover rounded-lg flex-shrink-0" 
+                                 onerror="this.onerror=null;this.src='https://placehold.co/80x80/00b4d8/white?text=DCST'">
+                            
+                            <!-- Room Info -->
+                            <div class="flex-grow">
+                                <h3 class="text-xl font-bold text-white mb-1">${room.name.split(' ')[0]}</h3>
+                                <p class="text-xs font-medium text-[var(--color-primary-light)] mb-2">${room.name}</p>
+                                
+                                <!-- Availability Indicator -->
+                                <div class="flex items-center space-x-2">
+                                    <span class="w-3 h-3 rounded-full ${statusColor}"></span>
+                                    <span class="text-sm font-semibold ${statusColor.replace('bg-', 'text-')}">${statusText}</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Expand Icon (Chevron Right to indicate sidebar opening) -->
+                            <svg class="w-6 h-6 text-[var(--color-primary-light)] flex-shrink-0" 
+                                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M9.707 18.293a1 1 0 010-1.414L14.586 12l-4.879-4.879a1 1 0 011.414-1.414l5.5 5.5a1 1 0 010 1.414l-5.5 5.5a1 1 0 01-1.414 0z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Function to inject all room cards into the DOM
+        function renderRoomCards() {
+            // Clear existing content
+            roomListContainer.innerHTML = '';
+            
+            // Generate HTML for each room and append to the container
+            const roomHtml = initialRooms.map(room => createRoomCard(room)).join('');
+            roomListContainer.innerHTML = roomHtml;
+        }
+
+        // --- SIDEBAR FUNCTIONALITY (Replaced old toggle) ---
+
+        // Function to open the detailed room sidebar (New functionality for "collapse right")
+        function openRoomDetailsSidebar(roomId) {
+            // Find the room data
+            const room = initialRooms.find(r => r.id === roomId);
+            if (!room) return; // Exit if room not found
+
+            // Determine status colors for the sidebar
+            const statusColor = room.available ? 'text-green-400' : 'text-red-400';
+            const statusDot = room.available ? 'bg-green-500' : 'bg-red-500';
+            const statusText = room.available ? 'Available for Booking' : 'Fully Booked Today';
+            
+            // Populate sidebar content
+            sidebarRoomName.textContent = room.name;
+            sidebarStatus.innerHTML = `
+                <span class="w-3 h-3 rounded-full ${statusDot}"></span>
+                <span class="${statusColor}">${statusText}</span>
+                <span class="ml-auto text-gray-400 text-sm md:text-lg">Capacity: ${room.capacity} Pax</span>
+            `;
+            sidebarImage.src = room.imageUrl;
+            sidebarFeatures.innerHTML = renderFeaturesList(room.features);
+            sidebarBookings.innerHTML = renderBookingList(room.bookings);
+            sidebarContact.textContent = room.contact;
+            
+            // Set the booking button action
+            sidebarBookBtn.onclick = () => showModal(`Booking Request for ${room.name}`, `Please contact the appropriate staff (${room.contact}) to finalize the booking for ${room.name}.`);
+
+            // Show the sidebar by moving it into view (removing translate-x-full)
+            roomDetailsSidebar.classList.remove('translate-x-full');
+        }
+
+        // Function to close the detailed room sidebar
+        function closeRoomDetailsSidebar() {
+            // Hide the sidebar by translating it off-screen to the right
+            roomDetailsSidebar.classList.add('translate-x-full');
+        }
+
+        // --- UTILITY/MODAL FUNCTIONS ---
+
+        // Function to display the placeholder modal for unimplemented pages/actions
+        function showModal(title, content = "This page/action is under development. Thank you for your interest!") {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-content').textContent = content;
+            document.getElementById('placeholder-modal').classList.remove('hidden');
+        }
+
+        // Function to close any modal by clicking outside
+        function closeModal(element) {
+             element.classList.add('hidden');
+        }
+
+        // --- INITIALIZATION ---
+        // Start the application by checking the login status
+        window.onload = checkLoginStatus;
+
+    </script>
+</body>
+</html>
