@@ -5,6 +5,6 @@ using namespace std;
 int main() {
     int w=0;
     cin>>w;
-    cout<<(w%2==0)? "YES": "NO";
+    (w%2==0 && w>2)? cout<<"YES": cout<<"NO";
     return 0;
 }
