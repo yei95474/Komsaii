@@ -5,9 +5,15 @@
 *.exe
 *.dll
 *.obj
+*.o
 *.pdb
 *.ipch
 *.pch
+
+# CodeBlocks IDE files
+*.cbp
+*.depend
+*.layout
 
 # Visual Studio user-specific files
 *.suo
