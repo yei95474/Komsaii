@@ -6,7 +6,7 @@ using namespace std;
 int main () {
     int n;
     cin>>n;
-    int people[n];
+    vector<int> people(n);
     int k1,k2,k;
     cin>>k1>>k2>>k;
 
@@ -16,11 +16,14 @@ int main () {
         for (int j=0; j<c; j++) {
             int temp;
             cin>>temp;
-            people[c]=temp;
-    }
-}
+            people[j]=temp;
+        }
 
-for (int i=0; i<n; i++){
-    cout<<people[i];
-}
+    }
+
+    for (int i=0; i<n; i++){
+        cout<<people[i];
+
+    }
+    cout<<"\n";
 }
