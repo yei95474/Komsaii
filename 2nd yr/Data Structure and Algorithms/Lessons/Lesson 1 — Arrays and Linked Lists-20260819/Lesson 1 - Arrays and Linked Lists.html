@@ -1,0 +1,2799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 1 — Arrays and Linked Lists · CSIT 103</title>
+  <meta name="author" content="Jomari Joseph A. Barrera">
+  <meta name="description" content="CSIT 103 Lesson 1: Arrays and Linked Lists. Visayas State University.">
+
+  <!-- Reveal.js -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/theme/white.css">
+
+  <!-- Highlight.js (GitHub Light theme) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11/styles/github.min.css">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    /* ── CSS Custom Properties (DO NOT MODIFY) ── */
+    :root {
+      --color-primary:       #1B3F6E;
+      --color-primary-light: #2E5FA3;
+      --color-primary-pale:  #D6E4F7;
+      --color-accent:        #D4820A;
+      --color-accent-light:  #FFF0CC;
+      --color-success:       #1A7A4A;
+      --color-success-bg:    #D4EDDA;
+      --color-warning:       #B45309;
+      --color-warning-bg:    #FEF3C7;
+      --color-danger:        #9B1C1C;
+      --color-danger-bg:     #FCDEDE;
+      --color-info:          #1E5F8B;
+      --color-info-bg:       #DBEAFE;
+      --color-bg:            #FAFAFA;
+      --color-surface:       #FFFFFF;
+      --color-surface-alt:   #F0F4F8;
+      --color-border:        #CBD5E1;
+      --color-code-bg:       #F6F8FA;
+      --color-code-fg:       #1F2328;
+      --color-code-border:   #D0D7DE;
+      --color-text:          #1C1C1E;
+      --color-text-muted:    #5A6474;
+      --color-text-on-dark:  #F0F4F8;
+
+      --t-display:   72px;
+      --t-h1:        56px;
+      --t-h2:        44px;
+      --t-h3:        32px;
+      --t-h4:        26px;
+      --t-body:      28px;
+      --t-body-sm:   24px;
+      --t-caption:   20px;
+      --t-code:      26px;
+      --t-code-blk:  24px;
+      --t-label:     18px;
+
+      --space-1:   8px;  --space-2:  16px; --space-3:  24px;
+      --space-4:  32px;  --space-5:  40px; --space-6:  48px;
+      --space-8:  64px;  --space-10: 80px; --space-12: 96px;
+    }
+
+    /* ── Base overrides ── */
+    .reveal { font-family: 'Inter', sans-serif; background: var(--color-bg); }
+    .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+      font-family: 'Inter', sans-serif;
+      text-transform: none;
+      color: var(--color-primary);
+    }
+    .reveal h2 { font-size: var(--t-h2); font-weight: 600; letter-spacing: -0.01em; line-height: 1.2; }
+    .reveal h3 { font-size: var(--t-h3); font-weight: 600; letter-spacing: 0; line-height: 1.3; }
+    .reveal p, .reveal li { font-size: var(--t-body); color: var(--color-text); line-height: 1.6; }
+    .reveal ul, .reveal ol { margin: 0; padding-left: var(--space-5); }
+    .reveal li { margin-bottom: var(--space-2); padding-left: var(--space-2); }
+    .reveal li::marker { color: var(--color-primary); font-weight: 700; }
+    .reveal li ul, .reveal li ol { margin-top: var(--space-2); font-size: var(--t-body-sm); }
+    .reveal pre code { font-family: 'Fira Code', monospace; font-size: var(--t-code-blk); line-height: 1.7; tab-size: 4; }
+    .reveal code:not(pre code) {
+      font-family: 'Fira Code', monospace;
+      font-size: var(--t-code);
+      background: var(--color-surface-alt);
+      color: var(--color-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 4px;
+      padding: 0.1em 0.35em;
+    }
+    .reveal pre {
+      border: 1px solid var(--color-code-border);
+      border-radius: 8px;
+      box-shadow: none;
+      width: 100%;
+      margin: 0;
+    }
+    .reveal section img { border-radius: 8px; }
+
+    /* ── Slide layout ── */
+    .slide-content {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      padding: 65px 15px;
+    }
+    .slide-header {
+      padding-bottom: var(--space-3);
+      border-bottom: 2px solid var(--color-primary-pale);
+      margin-bottom: var(--space-6);
+    }
+    .slide-body {
+      flex: 1;
+      overflow: hidden;
+    }
+    .slide-footer {
+      margin-top: auto;
+      padding-top: var(--space-2);
+      border-top: 1px solid var(--color-border);
+      display: flex;
+      justify-content: space-between;
+      font-size: var(--t-caption);
+      color: var(--color-text-muted);
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* ── Multi-column layouts ── */
+    .cols-2   { display: grid; grid-template-columns: 1fr 1fr;   gap: var(--space-6); }
+    .cols-3-2 { display: grid; grid-template-columns: 3fr 2fr;   gap: var(--space-6); align-items: flex-start; }
+    .cols-2-3 { display: grid; grid-template-columns: 2fr 3fr;   gap: var(--space-6); }
+    .cols-3   { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--space-6); }
+    .col-divider { border-left: 1px solid var(--color-border); padding-left: var(--space-6); min-width: 0; }
+    
+    /* ── Code wrapper (3-column in 3:2 layout) ── */
+    .cols-3-2 > div:first-child {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      min-width: 0;
+      overflow: hidden;
+    }
+    .cols-3-2 > div:first-child pre {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    /* ── Definition block ── */
+    .def {
+      border-left: 4px solid var(--color-primary);
+      padding: var(--space-3) var(--space-4);
+      background: var(--color-primary-pale);
+      border-radius: 0 8px 8px 0;
+      font-size: var(--t-body-sm);
+      line-height: 1.6;
+      margin: var(--space-3) 0;
+    }
+    .def strong { color: var(--color-primary); }
+
+    /* ── Callout boxes ── */
+    .callout-info, .callout-warn, .callout-danger, .callout-success {
+      border-radius: 8px;
+      padding: var(--space-4);
+      font-size: var(--t-body-sm);
+      line-height: 1.6;
+      margin: var(--space-3) 0;
+    }
+    .callout-info    { background: var(--color-info-bg);    border-left: 4px solid var(--color-info);    color: var(--color-info); }
+    .callout-warn    { background: var(--color-warning-bg); border-left: 4px solid var(--color-warning); color: var(--color-warning); }
+    .callout-danger  { background: var(--color-danger-bg);  border-left: 4px solid var(--color-danger);  color: var(--color-danger); }
+    .callout-success { background: var(--color-success-bg); border-left: 4px solid var(--color-success); color: var(--color-success); }
+
+    /* ── Tables ── */
+    .reveal table {
+      font-size: var(--t-body-sm);
+      border-collapse: collapse;
+      width: 100%;
+      background: var(--color-surface);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .reveal table thead tr { background: var(--color-primary); color: var(--color-text-on-dark); font-weight: 600; }
+    .reveal table tbody tr:nth-child(even) { background: var(--color-surface-alt); }
+    .reveal table tbody tr:hover { background: var(--color-primary-pale); }
+    .reveal table td, .reveal table th {
+      padding: var(--space-2) var(--space-3);
+      text-align: left;
+      border-bottom: 1px solid var(--color-border);
+    }
+    .reveal table td:first-child, .reveal table th:first-child { padding-left: var(--space-4); }
+
+    /* ── Complexity badges ── */
+    .o1     { background: var(--color-success-bg); color: var(--color-success);  border-radius: 6px; padding: 2px 10px; font-weight: 600; }
+    .ologn  { background: #D1FAE5;                  color: #065F46;               border-radius: 6px; padding: 2px 10px; font-weight: 600; }
+    .on     { background: var(--color-info-bg);    color: var(--color-info);     border-radius: 6px; padding: 2px 10px; font-weight: 600; }
+    .onlogn { background: var(--color-accent-light); color: var(--color-accent); border-radius: 6px; padding: 2px 10px; font-weight: 600; }
+    .on2    { background: var(--color-warning-bg); color: var(--color-warning);  border-radius: 6px; padding: 2px 10px; font-weight: 600; }
+    .o2n    { background: var(--color-danger-bg);  color: var(--color-danger);   border-radius: 6px; padding: 2px 10px; font-weight: 600; }
+
+    /* ── Section divider number watermark ── */
+    .section-num {
+      position: absolute;
+      font-size: 240px;
+      font-weight: 700;
+      color: var(--color-primary);
+      opacity: 0.07;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      user-select: none;
+      line-height: 1;
+    }
+
+    /* ── Recap block (§7.7) ── */
+    .recap-block {
+      background: rgba(214, 228, 247, 0.3);
+      border-radius: 8px;
+      padding: var(--space-5) var(--space-6);
+    }
+
+    /* ── Code caption ── */
+    .code-caption {
+      font-size: var(--t-caption);
+      color: var(--color-text-muted);
+      text-align: center;
+      margin-top: var(--space-3);
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* ── Lesson-specific styles ── */
+    /* (Add lesson-specific overrides below this line) */
+    .cover-lo li::marker { color: var(--color-accent); font-weight: 400; }
+  </style>
+</head>
+<body>
+<div class="reveal">
+  <div class="slides">
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         SLIDE 1 — COVER
+    ════════════════════════════════════════════════════════════════════ -->
+    <section data-transition="fade" data-transition-speed="slow"
+             style="background: linear-gradient(135deg, #1B3F6E 0%, #0F2A4A 100%);
+                    color: var(--color-text-on-dark);">
+
+      <!-- VSU Logo placeholder (top-right) -->
+      <!-- <img src="assets/img/vsu-logo-white.svg" alt="Visayas State University logo"
+           style="position: absolute; top: 40px; right: 40px; width: 80px; height: 80px;"> -->
+
+      <div style="display: flex; flex-direction: column; align-items: center;
+                  justify-content: center; height: 100%; gap: var(--space-3);">
+
+        <!-- Module + Lesson labels -->
+        <p style="font-size: var(--t-caption); font-weight: 500;
+                  color: rgba(240,244,248,0.55); margin: var(--space-6) 0 0 0;
+                  letter-spacing: 0.12em; text-transform: uppercase;">
+          Module 1 &nbsp;·&nbsp; Linear Structures and Sorting Algorithms
+        </p>
+        <p style="font-size: var(--t-h4); font-weight: 400;
+                  color: rgba(240,244,248,0.7); margin: 0;
+                  letter-spacing: 0.1em; text-transform: uppercase;">Lesson 1</p>
+
+        <!-- Lesson title -->
+        <h1 style="font-size: var(--t-display); font-weight: 700;
+                   color: var(--color-text-on-dark); margin: 0;
+                   letter-spacing: -0.02em; text-align: center;
+                   max-width: 1200px; line-height: 1.1;">
+          Arrays and Linked Lists
+        </h1>
+
+        <hr style="width: 200px; border: none;
+                   border-top: 3px solid var(--color-accent);
+                   margin: var(--space-2) 0;">
+
+        <!-- Learning Outcomes -->
+        <div style="background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15);
+                    border-radius: 10px; padding: var(--space-4) var(--space-6);
+                    max-width: 860px; width: 100%; text-align: left;">
+          <p style="font-size: var(--t-caption); font-weight: 600;
+                    color: var(--color-accent); margin: 0 0 var(--space-2) 0;
+                    letter-spacing: 0.08em; text-transform: uppercase;">Learning Outcomes</p>
+          <ol class="cover-lo" style="margin: 0; padding-left: var(--space-5); list-style-type: decimal;">
+            <li style="font-size: var(--t-body-sm); color: rgba(240,244,248,0.9);
+                       margin-bottom: var(--space-1); line-height: 1.5;">
+              Implement valid array operations.
+            </li>
+            <li style="font-size: var(--t-body-sm); color: rgba(240,244,248,0.9);
+                       margin-bottom: var(--space-1); line-height: 1.5;">
+              Analyze time and space complexity of array operations.
+            </li>
+            <li style="font-size: var(--t-body-sm); color: rgba(240,244,248,0.9);
+                       margin-bottom: var(--space-1); line-height: 1.5;">
+              Implement valid linked list operations.
+            </li>
+            <li style="font-size: var(--t-body-sm); color: rgba(240,244,248,0.9);
+                       margin-bottom: 0; line-height: 1.5;">
+              Compare time and space complexity of arrays and linked lists.
+            </li>
+          </ol>
+        </div>
+
+        <!-- Course / instructor -->
+        <p style="font-size: var(--t-body-sm); color: rgba(240,244,248,0.85); margin: 0;">
+          CSIT 103 · Data Structures and Algorithms
+        </p>
+        <p style="font-size: var(--t-caption); color: rgba(240,244,248,0.6); margin: 0 0 var(--space-6) 0;">
+          Jomari Joseph A. Barrera
+        </p>
+
+      </div>
+
+      <aside class="notes">
+        Good morning, everyone — welcome to Lesson 1. Today we're covering four things: what data structures and arrays really are, how we measure their speed with complexity analysis, how linked lists work, and finally how arrays and linked lists stack up against each other. By the end you'll know not just how each one works, but when to reach for which. Let's get started.
+      </aside>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         SECTION DIVIDER A — ADTs and Arrays
+    ════════════════════════════════════════════════════════════════════ -->
+    <section data-transition="zoom" data-transition-speed="fast"
+             style="background: var(--color-surface-alt);">
+      <div class="section-num">A</div>
+      <div style="display: flex; flex-direction: column; align-items: center;
+                  justify-content: center; height: 100%; gap: var(--space-3);
+                  position: relative; z-index: 1;">
+        <h1 style="font-size: var(--t-h1); font-weight: 700;
+                   color: var(--color-primary); margin: var(--space-6) 0 0 0;
+                   text-align: center; line-height: 1.1;">
+          Abstract Data Types and Arrays
+        </h1>
+        <p style="font-size: var(--t-body); color: var(--color-text-muted);
+                  margin: 0 0 var(--space-6) 0; text-align: center; max-width: 900px;">
+          What data structures are, how arrays work in memory,
+          and how to analyze their operations
+        </p>
+      </div>
+
+      <aside class="notes">
+        First section: Abstract Data Types and Arrays. We'll start with what a data structure actually is, then the idea of an ADT, then how arrays sit in memory and the four core operations — access, search, insert, and delete — and wrap up with a complexity summary for arrays.
+      </aside>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         SECTION A SLIDES — ADTs and Arrays
+    ════════════════════════════════════════════════════════════════════ -->
+
+    <!-- A-1: What Is a Data Structure? -->
+    <section>
+      <div class="slide-content">
+        <div class="slide-header">
+          <h2>What Is a Data Structure?</h2>
+        </div>
+        <div class="slide-body">
+          <div style="display: flex; justify-content: center; align-items: flex-end;
+                      gap: var(--space-5); margin-bottom: var(--space-5);">
+            <figure style="margin: 0; text-align: center;">
+              <svg viewBox="0 0 200 165" role="img" aria-label="Array: four contiguous cells holding 7, 3, 9, 5 at indices 0 to 3" style="height: 200px; width: auto;">
+                <g fill="var(--color-primary-pale)" stroke="var(--color-primary)" stroke-width="2">
+                  <rect x="8" y="64" width="44" height="44"/><rect x="52" y="64" width="44" height="44"/>
+                  <rect x="96" y="64" width="44" height="44"/><rect x="140" y="64" width="44" height="44"/>
+                </g>
+                <g font-family="Fira Code, monospace" font-size="22" font-weight="700" fill="var(--color-primary)" text-anchor="middle">
+                  <text x="30" y="93">7</text><text x="74" y="93">3</text><text x="118" y="93">9</text><text x="162" y="93">5</text>
+                </g>
+                <g font-family="Inter, sans-serif" font-size="14" fill="var(--color-text-muted)" text-anchor="middle">
+                  <text x="30" y="128">0</text><text x="74" y="128">1</text><text x="118" y="128">2</text><text x="162" y="128">3</text>
+                </g>
+              </svg>
+              <figcaption style="font-size: var(--t-label); color: var(--color-text-muted);
+                                 margin-top: var(--space-1);">Array</figcaption>
+            </figure>
+            <figure style="margin: 0; text-align: center;">
+              <svg viewBox="0 0 270 165" role="img" aria-label="Singly linked list: nodes 10, 20, 30 each pointing to the next, ending at null" style="height: 200px; width: auto;">
+                <defs><marker id="ll1-arr" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="var(--color-primary)"/></marker></defs>
+                <g>
+                  <rect x="8" y="60" width="34" height="44" fill="var(--color-primary-pale)" stroke="var(--color-primary)" stroke-width="2"/>
+                  <rect x="42" y="60" width="16" height="44" fill="var(--color-surface)" stroke="var(--color-primary)" stroke-width="2"/>
+                  <circle cx="50" cy="82" r="4" fill="var(--color-primary)"/>
+                  <rect x="84" y="60" width="34" height="44" fill="var(--color-primary-pale)" stroke="var(--color-primary)" stroke-width="2"/>
+                  <rect x="118" y="60" width="16" height="44" fill="var(--color-surface)" stroke="var(--color-primary)" stroke-width="2"/>
+                  <circle cx="126" cy="82" r="4" fill="var(--color-primary)"/>
+                  <rect x="160" y="60" width="34" height="44" fill="var(--color-primary-pale)" stroke="var(--color-primary)" stroke-width="2"/>
+                  <rect x="194" y="60" width="16" height="44" fill="var(--color-surface)" stroke="var(--color-primary)" stroke-width="2"/>
+                  <circle cx="202" cy="82" r="4" fill="var(--color-primary)"/>
+                </g>
+                <g stroke="var(--color-primary)" stroke-width="2" marker-end="url(#ll1-arr)">
+                  <line x1="50" y1="82" x2="82" y2="82"/><line x1="126" y1="82" x2="158" y2="82"/><line x1="202" y1="82" x2="234" y2="82"/>
+                </g>
+                <g font-family="Fira Code, monospace" font-size="20" font-weight="700" fill="var(--color-primary)" text-anchor="middle">
+                  <text x="25" y="89">10</text><text x="101" y="89">20</text><text x="177" y="89">30</text>
+                </g>
+                <text x="250" y="89" font-family="Inter, sans-serif" font-size="22" fill="var(--color-text-muted)" text-anchor="middle">∅</text>
+              </svg>
+              <figcaption style="font-size: var(--t-label); color: var(--color-text-muted);
+                                 margin-top: var(--space-1);">Linked List</figcaption>
+            </figure>
+            <figure style="margin: 0; text-align: center;">
+              <svg viewBox="0 0 180 185" role="img" aria-label="Stack: last-in first-out; four boxes stacked vertically with the top pointer on the most recently pushed element" style="height: 200px; width: auto;">
+                <defs><marker id="st1-arr" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="var(--color-accent)"/></marker></defs>
+                <g fill="var(--color-primary-pale)" stroke="var(--color-primary)" stroke-width="2">
+                  <rect x="14" y="44" width="84" height="30"/><rect x="14" y="74" width="84" height="30"/>
+                  <rect x="14" y="104" width="84" height="30"/><rect x="14" y="134" width="84" height="30"/>
+                </g>
+                <g font-family="Fira Code, monospace" font-size="17" font-weight="700" fill="var(--color-primary)" text-anchor="middle">
+                  <text x="56" y="64">7</text><text x="56" y="94">2</text><text x="56" y="124">9</text><text x="56" y="154">5</text>
+                </g>
+                <line x1="140" y1="59" x2="101" y2="59" stroke="var(--color-accent)" stroke-width="2" marker-end="url(#st1-arr)"/>
+                <text x="144" y="64" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="var(--color-accent)" text-anchor="start">top</text>
+              </svg>
+              <figcaption style="font-size: var(--t-label); color: var(--color-text-muted);
+                                 margin-top: var(--space-1);">Stack</figcaption>
+            </figure>
+            <figure style="margin: 0; text-align: center;">
+              <svg viewBox="0 0 260 145" role="img" aria-label="Queue: first-in first-out; four boxes in a row, front on the left for dequeue and rear on the right for enqueue" style="height: 200px; width: auto;">
+                <defs><marker id="q1-arr" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="var(--color-text-muted)"/></marker></defs>
+                <g fill="var(--color-primary-pale)" stroke="var(--color-primary)" stroke-width="2">
+                  <rect x="30" y="52" width="46" height="40"/><rect x="76" y="52" width="46" height="40"/>
+                  <rect x="122" y="52" width="46" height="40"/><rect x="168" y="52" width="46" height="40"/>
+                </g>
+                <g font-family="Fira Code, monospace" font-size="19" font-weight="700" fill="var(--color-primary)" text-anchor="middle">
+                  <text x="53" y="78">5</text><text x="99" y="78">9</text><text x="145" y="78">2</text><text x="191" y="78">7</text>
+                </g>
+                <g font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="var(--color-accent)" text-anchor="middle">
+                  <text x="53" y="118">front</text><text x="191" y="118">rear</text>
+                </g>
+                <line x1="28" y1="38" x2="6" y2="38" stroke="var(--color-text-muted)" stroke-width="2" marker-end="url(#q1-arr)"/>
+                <text x="6" y="28" font-family="Inter, sans-serif" font-size="13" fill="var(--color-text-muted)" text-anchor="start">dequeue</text>
+                <line x1="236" y1="38" x2="216" y2="38" stroke="var(--color-text-muted)" stroke-width="2" marker-end="url(#q1-arr)"/>
+                <text x="234" y="28" font-family="Inter, sans-serif" font-size="13" fill="var(--color-text-muted)" text-anchor="end">enqueue</text>
+              </svg>
+              <figcaption style="font-size: var(--t-label); color: var(--color-text-muted);
+                                 margin-top: var(--space-1);">Queue</figcaption>
+            </figure>
+            <figure style="margin: 0; text-align: center;">
+              <svg viewBox="0 0 210 185" role="img" aria-label="Hash table: array of four buckets; buckets 0, 2, 3 hold chained entries, bucket 2 chains two entries" style="height: 200px; width: auto;">
+                <defs><marker id="ht1-arr" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="var(--color-primary)"/></marker></defs>
+                <g fill="var(--color-surface-alt)" stroke="var(--color-border)" stroke-width="2">
+                  <rect x="26" y="6" width="44" height="36"/><rect x="26" y="48" width="44" height="36"/>
+                  <rect x="26" y="90" width="44" height="36"/><rect x="26" y="132" width="44" height="36"/>
+                </g>
+                <g font-family="Inter, sans-serif" font-size="15" fill="var(--color-text-muted)" text-anchor="middle">
+                  <text x="14" y="29">0</text><text x="14" y="71">1</text><text x="14" y="113">2</text><text x="14" y="155">3</text>
+                </g>
+                <g stroke="var(--color-primary)" stroke-width="2" marker-end="url(#ht1-arr)">
+                  <line x1="70" y1="24" x2="88" y2="24"/><line x1="70" y1="108" x2="88" y2="108"/>
+                  <line x1="130" y1="108" x2="148" y2="108"/><line x1="70" y1="150" x2="88" y2="150"/>
+                </g>
+                <g fill="var(--color-primary-pale)" stroke="var(--color-primary)" stroke-width="2">
+                  <rect x="90" y="9" width="40" height="30"/><rect x="90" y="93" width="40" height="30"/>
+                  <rect x="150" y="93" width="40" height="30"/><rect x="90" y="135" width="40" height="30"/>
+                </g>
+                <g font-family="Fira Code, monospace" font-size="17" font-weight="700" fill="var(--color-primary)" text-anchor="middle">
+                  <text x="110" y="30">18</text><text x="110" y="114">7</text><text x="170" y="114">31</text><text x="110" y="156">12</text>
+                </g>
+              </svg>
+              <figcaption style="font-size: var(--t-label); color: var(--color-text-muted);
+                                 margin-top: var(--space-1);">Hash Table</figcaption>
+            </figure>
+            <figure style="margin: 0; text-align: center;">
+              <svg viewBox="0 0 200 180" role="img" aria-label="Binary search tree: root 50 with children 30 and 70; node 30 has children 20 and 40" style="height: 200px; width: auto;">
+                <g stroke="var(--color-primary)" stroke-width="2">
+                  <line x1="100" y1="30" x2="56" y2="92"/><line x1="100" y1="30" x2="144" y2="92"/>
+                  <line x1="56" y1="92" x2="30" y2="152"/><line x1="56" y1="92" x2="82" y2="152"/>
+                </g>
+                <g fill="var(--color-primary-pale)" stroke="var(--color-primary)" stroke-width="2">
+                  <circle cx="100" cy="30" r="20"/><circle cx="56" cy="92" r="20"/><circle cx="144" cy="92" r="20"/>
+                  <circle cx="30" cy="152" r="18"/><circle cx="82" cy="152" r="18"/>
+                </g>
+                <g font-family="Fira Code, monospace" font-size="18" font-weight="700" fill="var(--color-primary)" text-anchor="middle">
+                  <text x="100" y="37">50</text><text x="56" y="99">30</text><text x="144" y="99">70</text><text x="30" y="158">20</text><text x="82" y="158">40</text>
+                </g>
+              </svg>
+              <figcaption style="font-size: var(--t-label); color: var(--color-text-muted);
+                                 margin-top: var(--space-1);">Binary Search Tree</figcaption>
+            </figure>
+          </div>
+          <div class="def">
+            <strong>Data Structure</strong> — An organized arrangement of data in memory
+            that enables efficient storage, retrieval, and modification. The choice of
+            structure determines the performance of every operation performed on that data.
+          </div>
+          <ul style="margin-top: var(--space-5);">
+            <li class="fragment">Data structures store <strong>values</strong> and define the <strong>relationships</strong> between them</li>
+            <li class="fragment">Each structure supports a fixed set of <strong>operations</strong> (e.g., insert, search, delete)</li>
+            <li class="fragment">No single structure is best for every problem — choosing well is a core engineering skill</li>
+            <li class="fragment">This course covers <strong>linear structures</strong> (arrays, lists, stacks, queues) and <strong>hierarchical structures</strong> (trees)</li>
+          </ul>
+        </div>
+        <div class="slide-footer">
+          <span>Lesson 1 — Arrays and Linked Lists</span>
+          <span></span>
+        </div>
+      </div>
+      <aside class="notes">
+        Let me start with a question — when you store your contacts on your phone, what does the software actually have to do? It has to insert new contacts, search for one, delete others. A data structure is just how we organize that data so those operations stay fast. Up here are the six structures we'll meet this semester — arrays, linked lists, stacks, queues, hash tables, and binary search trees. The big idea I want you to leave with: there's no single best structure for everything. Picking the right one is a real engineering decision, not just an implementation detail.
+      </aside>
+    </section>
+
+    <!-- A-2: Abstract Data Type (ADT) -->
+    <section>
+      <div class="slide-content">
+        <div class="slide-header">
+          <h2>Abstract Data Type</h2>
+        </div>
+        <div class="slide-body">
+          <div class="def">
+            <strong>Abstract Data Type (ADT)</strong> — A mathematical model that specifies
+            a data type by its <em>behavior</em> (the set of operations and their semantics)
+            without prescribing how that behavior is implemented in memory.
+          </div>
+          <div class="cols-2" style="margin-top: var(--space-5);">
+            <div>
+              <h3>ADT specifies <em>what</em></h3>
+              <ul>
+                <li class="fragment">Supported operations</li>
+                <li class="fragment">Preconditions and postconditions</li>
+                <li class="fragment">Observable behavior from the caller's perspective</li>
+              </ul>
+            </div>
+            <div class="col-divider">
+              <h3>Implementation specifies <em>how</em></h3>
+              <ul>
+                <li class="fragment">Memory layout (array, nodes, hash table …)</li>
+                <li class="fragment">Pointer / index management</li>
+                <li class="fragment">Time and space trade-offs</li>
+              </ul>
+            </div>
+          </div>
+          <div class="callout-info fragment" style="margin-top: var(--space-4);">
+            ℹ The <strong>List ADT</strong> can be implemented with either an array or a linked list —
+            same interface, different performance characteristics.
+          </div>
+        </div>
+        <div class="slide-footer">
+          <span>Lesson 1 — Arrays and Linked Lists</span>
+          <span></span>
+        </div>
+      </div>
+      <aside class="notes">
+        Here's a distinction that trips a lot of people up. Think of a TV remote — the buttons are the interface, what you can do. The circuit board inside is the implementation, how it actually works. Two brands can have identical buttons but completely different electronics. That's exactly an ADT versus its implementation: the ADT says what operations exist, the implementation decides how. So if I hand you a List with insert and search, does it matter to you whether it's an array or a linked list underneath? For correctness, no — only the performance changes.
+      </aside>
+    </section>
+
+    <!-- A-3: The Array ADT -->
+    <section>
+      <div class="slide-content">
+        <div class="slide-header">
+          <h2>The Array</h2>
+        </div>
+        <div class="slide-body">
+          <div class="cols-3-2">
+            <div>
+              <p>An <strong>array</strong> is a finite, ordered sequence of elements of the same type,
+              stored in <strong>contiguous memory locations</strong> and accessed via a zero-based
+              integer index.</p>
+              <ul style="margin-top: var(--space-4);">
+                <li class="fragment"><strong>Fixed size</strong> — declared at creation; cannot grow or shrink (static array)</li>
+                <li class="fragment"><strong>Random access</strong> — any element reached in O(1) by index arithmetic</li>
+                <li class="fragment"><strong>Cache-friendly</strong> — sequential elements sit in adjacent memory; prefetching works well</li>
+              </ul>
+              <div class="def fragment" style="margin-top: var(--space-4);">
+                <strong>Index formula:</strong> <code>address(i) = base + i × sizeof(T)</code><br>
+                where <code>base</code> is the address of element 0 and <code>T</code> is the element type.
+              </div>
+            </div>
+            <div class="col-divider" style="display: flex; flex-direction: column; justify-content: center;">
+              <!-- Memory layout diagram (text-based) -->
+              <p style="font-size: var(--t-caption); color: var(--color-text-muted); margin-bottom: var(--space-3); text-align: center;">Memory layout — <code>int arr[5]</code></p>
+              <table style="text-align: center;">
+                <thead>
+                  <tr><th>Index</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="color: var(--color-text-muted);">Value</td>
+                    <td>10</td><td>25</td><td>7</td><td>42</td><td>3</td>
+                  </tr>
+                  <tr>
+                    <td style="color: var(--color-text-muted);">Address</td>
+                    <td style="font-size: var(--t-label);">1000</td>
+                    <td style="font-size: var(--t-label);">1004</td>
+                    <td style="font-size: var(--t-label);">1008</td>
+                    <td style="font-size: var(--t-label);">1012</td>
+                    <td style="font-size: var(--t-label);">1016</td>
+                  </tr>
+                </tbody>
+              </table>
+              <p class="code-caption">Each <code>int</code> occupies 4 bytes in most computers; addresses are contiguous</p>
+            </div>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <span>Lesson 1 — Arrays and Linked Lists</span>
+          <span></span>
+        </div>
+      </div>
+      <aside class="notes">
+        An array is just a row of same-type elements sitting in contiguous memory, reached by a zero-based index. Look at the address formula with me. Say our base address is 1000 and each int is 4 bytes — where's index 3? 1000 plus 3 times 4, so 1012. That's it. One multiply, one add, and the CPU has the address. That's why array access is O(1): it doesn't matter if the array holds five elements or five million, the math is exactly the same.
+      </aside>
+    </section>
+
+    <!-- A-4: Static vs. Dynamic Arrays -->
+    <section>
+      <div class="slide-content">
+        <div class="slide-header">
+          <h2>Static vs. Dynamic Arrays</h2>
+        </div>
+        <div class="slide-body">
+          <div class="cols-2">
+            <div>
+              <p style="font-size: var(--t-h4); font-weight: 600; color: var(--color-primary);
+                        margin-bottom: var(--space-3);">Static Array — <code>int arr[N]</code></p>
+              <ul>
+                <li>Size fixed at <strong>compile time</strong></li>
+                <li>Allocated on the <strong>stack</strong></li>
+                <li>No overhead — fastest possible allocation</li>
+                <li>Overflow if <em>N</em> is underestimated</li>
+                <li>Waste if <em>N</em> is overestimated</li>
+              </ul>
+              <pre style="margin-top: var(--space-4);"><code class="language-cpp" data-trim data-noescape>
+int scores[30];       // fixed: exactly 30 ints
+scores[0] = 95;       // O(1) access
+              </code></pre>
+            </div>
+            <div class="col-divider">
+              <p style="font-size: var(--t-h4); font-weight: 600; color: var(--color-primary);
+                        margin-bottom: var(--space-3);">Dynamic Array — <code>std::vector&lt;T&gt;</code></p>
+              <ul>
+                <li>Size adjustable at <strong>run time</strong></li>
+                <li>Allocated on the <strong>heap</strong></li>
+                <li>Amortized O(1) <code>push_back</code> via doubling</li>
+                <li>Slightly higher overhead (capacity, size, pointer)</li>
+                <li>Preferred in production C++ code</li>
+              </ul>
+              <pre style="margin-top: var(--space-4);"><code class="language-cpp" data-trim data-noescape>
+std::vector&lt;int&gt; v;
+v.push_back(95);      // appends; resizes if needed
+v[0] = 88;            // O(1) access
+              </code></pre>
+            </div>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <span>Lesson 1 — Arrays and Linked Lists</span>
+          <span></span>
+        </div>
+      </div>
+      <aside class="notes">
+        Two flavors of array. A static array — int arr[N] — has its size fixed at compile time and lives on the stack: fast, but if you guess N wrong you either overflow or waste space. A dynamic array — std::vector — grows at run time on the heap. Here's the key thing I want you to hold onto: a vector is still a contiguous array underneath. When it runs out of room, it allocates a new block double the size and copies everything over. That copy is O(n), but it happens so rarely that the average cost per push_back is still O(1). And why double instead of adding one slot each time? Because doubling keeps the total number of copies low across many insertions.
+      </aside>
+    </section>
+
+    <!-- A-5: Array Operation — Access -->
+    <section>
+      <div class="slide-content">
+        <div class="slide-header">
+          <h2>Array Operation: Access</h2>
+        </div>
+        <div class="slide-body">
+          <pre><code class="language-cpp" data-trim data-noescape data-line-numbers="1-2|4-5|7-8">
+int arr[] = {10, 25, 7, 42, 3};
+int n = 5;
+
+// Direct index access — O(1)
+int val = arr[2];   // val = 7
+
+// Bounds check (good practice)
+if (idx >= 0 &amp;&amp; idx &lt; n) int safe = arr[idx];
+          </code></pre>
+          <p class="code-caption">Address computed as <code>base + index × sizeof(int)</code> — one arithmetic operation, independent of <em>n</em></p>
+          <div class="cols-2" style="margin-top: var(--space-5);">
+            <div>
+              <table>
+                <thead><tr><th>Case</th><th>Time</th><th>Reason</th></tr></thead>
+                <tbody>
+                  <tr><td>Any index</td><td><span class="o1">O(1)</span></td><td>Direct address computation</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div>
+              <table>
+                <thead><tr><th>Space (auxiliary)</th><th></th></tr></thead>
+                <tbody>
+                  <tr><td>No extra memory used</td><td><span class="o1">O(1)</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <span>Lesson 1 — Arrays and Linked Lists</span>
+          <span></span>
+        </div>
+      </div>
+      <aside class="notes">
+        Here's array access in code. First the array. Then the direct index access — one operation, val comes out 7. Now, this part is important: C++ does not check your bounds for you. Go past the end and it's undefined behavior — no error, just garbage or a crash. So always validate the index yourself, like in that last line. And remember what O(1) really means here — five elements or five million, accessing by index takes exactly the same time.
+      </aside>
+    </section>
+
+    <!-- A-6: Array Operation — Linear Search -->
+    <section>
+      <div class="slide-content">
+        <div class="slide-header">
+          <h2>Array Operation: Linear Search</h2>
+        </div>
+        <div class="slide-body">
+          <pre><code class="language-cpp" data-trim data-noescape data-line-numbers="1-3|4-6|7|9">
+// Returns index of target, or -1 if not found
+int linearSearch(int arr[], int n, int target) {
+    for (int i = 0; i &lt; n; i++) {   // iterate every element
+        if (arr[i] == target)
+            return i;                // found — stop early
+    }
+    return -1;                       // not found
+}
+// Usage: int pos = linearSearch(arr, 5, 42);
+          </code></pre>
+          <p class="code-caption">Sequentially examines each element until a match is found or the array is exhausted</p>
+          <table style="margin-top: var(--space-5);">
+            <thead><tr><th>Case</th><th>Condition</th><th>Time</th></tr></thead>
+            <tbody>
+              <tr><td>Best</td><td>Target is at index 0</td><td><span class="o1">O(1)</span></td></tr>
+              <tr><td>Average</td><td>Target is somewhere in the middle</td><td><span class="on">O(n)</span></td></tr>
+              <tr><td>Worst</td><td>Target is at the last index, or absent</td><td><span class="on">O(n)</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="slide-footer">
+          <span>Lesson 1 — Arrays and Linked Lists</span>
+          <span></span>
+        </div>
+      </div>
+      <aside class="notes">
+        Linear search: we walk the array element by element until we find the target or run out. Notice the early return the moment we match. Best case, the target's at index 0 — one comparison, done. Worst case, it's at the very end or not there at all, and we check all n elements. For analysis, that worst case is what we care about. So when would you use this over binary search? Only when the array isn't sorted — binary search needs sorted data, but then it gives you O(log n) instead.
+      </aside>
+    </section>
+
+    <!-- A-7: Array Operation — Insert at Index -->
+    <section>
+      <div class="slide-content">
+        <div class="slide-header">
+          <h2>Array Operation: Insert at Index</h2>
+        </div>
+        <div class="slide-body">
+          <pre><code class="language-cpp" data-trim data-noescape data-line-numbers="1-4|5-8|9-10">
+// Insert val at position pos; arr has capacity for n+1 elements
+void insertAt(int arr[], int&amp; n, int pos, int val) {
+    // Shift elements right to open a slot
+    for (int i = n; i &gt; pos; i--)
+        arr[i] = arr[i - 1];   // shift right: O(n) in worst case
+    arr[pos] = val;             // place the new value
+    n++;                        // update size
+}
+// Insert at tail (no shifting needed)
+// arr[n++] = val;   — O(1)
+          </code></pre>
+          <p class="code-caption">Insertion at an arbitrary index requires shifting all subsequent elements one position right</p>
+          <table style="margin-top: var(--space-4);">
+            <thead><tr><th>Position</th><th>Shifts Required</th><th>Time</th></tr></thead>
+            <tbody>
+              <tr><td>At tail (<code>arr[n]</code>)</td><td>0 shifts</td><td><span class="o1">O(1)</span></td></tr>
+              <tr><td>At middle</td><td>~n/2 shifts</td><td><span class="on">O(n)</span></td></tr>
+              <tr><td>At head (index 0)</td><td>n shifts</td><td><span class="on">O(n)</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="slide-footer">
+          <span>Lesson 1 — Arrays and Linked Lists</span>
+          <span></span>
+        </div>
+      </div>
+      <aside class="notes">
+        To insert in the middle of an array, you first have to make room. Watch the shifting loop — every element from that position onward slides one slot to the right before we drop the new value in. That shifting is exactly why this is O(n). Picture [10, 25, 42, 3] and inserting 7 at index 1: 25, 42, and 3 all shift right first. The one exception is inserting at the tail — no shifting, so that's O(1). And what if the array's already full? For a fixed-size array, undefined behavior; a vector would just reallocate.
+      </aside>
+    </section>
+
+    <!-- A-8: Array Operation — Delete at Index -->
+    <section>
+      <div class="slide-content">
+        <div class="slide-header">
+          <h2>Array Operation: Delete at Index</h2>
+        </div>
+        <div class="slide-body">
+          <pre><code class="language-cpp" data-trim data-noescape data-line-numbers="1-4|5-7|8">
+// Delete element at position pos
+void deleteAt(int arr[], int&amp; n, int pos) {
+    // Shift elements left to close the gap
+    for (int i = pos; i &lt; n - 1; i++)
+        arr[i] = arr[i + 1];   // shift left: O(n) in worst case
+    n--;                        // update size
+}
+// Delete from tail: n--;   — O(1)
+          </code></pre>
+          <p class="code-caption">Deletion at an arbitrary index requires shifting all subsequent elements one position left</p>
+          <table style="margin-top: var(--space-4);">
+            <thead><tr><th>Position</th><th>Shifts Required</th><th>Time</th></tr></thead>
+            <tbody>
+              <tr><td>At tail (<code>arr[n-1]</code>)</td><td>0 shifts</td><td><span class="o1">O(1)</span></td></tr>
+              <tr><td>At middle</td><td>~n/2 shifts</td><td><span class="on">O(n)</span></td></tr>
+              <tr><td>At head (index 0)</td><td>n−1 shifts</td><td><span class="on">O(n)</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="slide-footer">
+          <span>Lesson 1 — Arrays and Linked Lists</span>
+          <span></span>
+        </div>
+      </div>
+      <aside class="notes">
+        Deletion is the mirror image. To remove from the middle, everything after the gap shifts one slot left to close it — again O(n). Take [10, 7, 25, 42, 3] and delete index 1, the value 7: then 25, 42, 3 all shift left. One subtle point — the old value is still physically in memory; we just decrement n so it's logically gone. That's fine for an int, but it matters for objects with destructors. Deleting from the tail, of course, is O(1) — just decrement.
+      </aside>
+    </section>
+
+    <!-- A-9: Array Complexity Summary -->
+    <section>
+      <div class="slide-content">
+        <div class="slide-header">
+          <h2>Array Complexity Summary</h2>
+        </div>
+        <div class="slide-body">
+          <table>
+            <thead>
+              <tr>
+                <th>Operation</th>
+                <th>Best Case</th>
+                <th>Average Case</th>
+                <th>Worst Case</th>
+                <th>Space (aux.)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Access by index</td>
+                <td><span class="o1">O(1)</span></td>
+                <td><span class="o1">O(1)</span></td>
+                <td><span class="o1">O(1)</span></td>
+                <td><span class="o1">O(1)</span></td>
+              </tr>
+              <tr>
+                <td>Linear search</td>
+                <td><span class="o1">O(1)</span></td>
+                <td><span class="on">O(n)</span></td>
+                <td><span class="on">O(n)</span></td>
+                <td><span class="o1">O(1)</span></td>
+              </tr>
+              <tr>
+                <td>Insert at tail</td>
+                <td><span class="o1">O(1)</span></td>
+                <td><span class="o1">O(1)</span></td>
+                <td><span class="o1">O(1)</span></td>
+                <td><span class="o1">O(1)</span></td>
+              </tr>
+              <tr>
+                <td>Insert at index <em>i</em></td>
+                <td><span class="o1">O(1)</span></td>
+                <td><span class="on">O(n)</span></td>
+                <td><span class="on">O(n)</span></td>
+                <td><span class="o1">O(1)</span></td>
+              </tr>
+              <tr>
+                <td>Delete from tail</td>
+                <td><span class="o1">O(1)</span></td>
+                <td><span class="o1">O(1)</span></td>
+                <td><span class="o1">O(1)</span></td>
+                <td><span class="o1">O(1)</span></td>
+              </tr>
+              <tr>
+                <td>Delete at index <em>i</em></td>
+                <td><span class="o1">O(1)</span></td>
+                <td><span class="on">O(n)</span></td>
+                <td><span class="on">O(n)</span></td>
+                <td><span class="o1">O(1)</span></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="callout-success" style="margin-top: var(--space-4);">
+            ✓ Arrays excel at <strong>random access</strong> (O(1) by index) and are
+            <strong>cache-friendly</strong> due to contiguous memory layout.
+            Best suited for problems where element positions are known or the collection is rarely resized.
+          </div>
+        </div>
+        <div class="slide-footer">
+          <span>Lesson 1 — Arrays and Linked Lists</span>
+          <span></span>
+        </div>
+      </div>
+      <aside class="notes">
+        Here's the whole array story in one table. Notice the pattern: anything that needs shifting is O(n); anything that's direct index work is O(1). So what's the array's biggest weakness? Insert and delete in the middle — all that shifting. Hold onto that thought, because the linked list we'll see in Section C fixes exactly this weakness — though, as you'll find out, it charges us for it elsewhere.
+      </aside>
+    </section>
+
+    <!-- A-10: Section A Recap -->
+    <section>
+      <div class="slide-content">
+        <div class="slide-header">
+          <h2>ADTs and Arrays</h2>
+        </div>
+        <div class="slide-body">
+          <div class="recap-block">
+            <ul>
+              <li>✓ A <strong>data structure</strong> organizes data to enable efficient operations</li>
+              <li>✓ An <strong>ADT</strong> defines what operations are supported — not how they are implemented</li>
+              <li>✓ Arrays store elements in <strong>contiguous memory</strong>; access by index is <strong>O(1)</strong></li>
+              <li>✓ <strong>Static arrays</strong> have compile-time fixed size; <strong>dynamic arrays</strong> (<code>std::vector</code>) resize at run time</li>
+              <li>✓ Insertion and deletion at arbitrary positions require <strong>O(n) shifting</strong></li>
+              <li>✓ Arrays are optimal when index-based access is frequent and the size is predictable</li>
+            </ul>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <span>Lesson 1 — Arrays and Linked Lists</span>
+          <span></span>
+        </div>
+      </div>
+      <aside class="notes">
+        Quick recap of what we've covered. Data structures organize data for efficient operations; an ADT is the what, not the how; arrays are contiguous with O(1) access but O(n) insert and delete in the middle. Any questions on arrays before we move on? ... Good. Next we need a precise way to talk about how fast these operations are — and that's exactly what asymptotic notation gives us.
+      </aside>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         SECTION DIVIDER B — Asymptotic Analysis
+    ════════════════════════════════════════════════════════════════════ -->
+    <section data-transition="zoom" data-transition-speed="fast"
+             style="background: var(--color-surface-alt);">
+      <div class="section-num">B</div>
+      <div style="display: flex; flex-direction: column; align-items: center;
+                  justify-content: center; height: 100%; gap: var(--space-3);
+                  position: relative; z-index: 1;">
+        <h1 style="font-size: var(--t-h1); font-weight: 700;
+                   color: var(--color-primary); margin: var(--space-6) 0 0 0;
+                   text-align: center; line-height: 1.1;">
+          Asymptotic Analysis
+        </h1>
+        <p style="font-size: var(--t-body); color: var(--color-text-muted);
+                  margin: 0 0 var(--space-6) 0; text-align: center; max-width: 900px;">
+          Big-O, Big-Ω, Big-Θ, complexity classes,
+          and an introduction to recursion
+        </p>
+      </div>
+
+      <aside class="notes">
+        Section B: Asymptotic Analysis — this is our vocabulary for performance. We'll cover why analysis matters, the three notations (Big-O, Big-Omega, Big-Theta), the six complexity classes you'll see all semester, the best/average/worst-case distinction, and a quick first look at recursion.
+      </aside>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         SECTION B SLIDES — Asymptotic Analysis
+    ════════════════════════════════════════════════════════════════════ -->
+
+    <!-- B-1: Why Analyze Algorithms? -->
+    <section>
+      <div class="slide-content">
+        <div class="slide-header">
+          <h2>Why Analyze Algorithms?</h2>
+        </div>
+        <div class="slide-body">
+          <div style="display: flex; align-items: flex-start; gap: var(--space-6);">
+            <svg viewBox="0 0 540 500" role="img" aria-labelledby="bigo-growth-title"
+                 style="max-height: 510px; width: auto; border-radius: 8px;
+                        border: 1px solid var(--color-border); background: var(--color-surface);
+                        padding: 8px; flex-shrink: 0;">
+              <title id="bigo-growth-title">Big-O growth chart: O(1), O(log n), O(n), O(n log n), O(n squared), and O(2 to the n) plotted as number of operations versus input size n. Higher-order classes grow far faster as n increases.</title>
+              <!-- axes -->
+              <line x1="70" y1="450" x2="470" y2="450" stroke="var(--color-text-muted)" stroke-width="2"/>
+              <line x1="70" y1="450" x2="70" y2="40" stroke="var(--color-text-muted)" stroke-width="2"/>
+              <text x="255" y="486" text-anchor="middle" font-family="Inter, sans-serif" font-size="20" fill="var(--color-text-muted)">Input size (n) →</text>
+              <text x="30" y="245" text-anchor="middle" font-family="Inter, sans-serif" font-size="20" fill="var(--color-text-muted)" transform="rotate(-90 30 245)">Operations →</text>
+              <!-- curves (semantic colors per §9) -->
+              <path d="M70,432 H460" fill="none" stroke="#1A7A4A" stroke-width="3"/>
+              <path d="M70,450 Q170,378 460,366" fill="none" stroke="#065F46" stroke-width="3"/>
+              <path d="M70,450 L460,176" fill="none" stroke="#1E5F8B" stroke-width="3"/>
+              <path d="M70,450 Q300,326 428,96" fill="none" stroke="#D4820A" stroke-width="3"/>
+              <path d="M70,450 Q330,432 360,62" fill="none" stroke="#B45309" stroke-width="3"/>
+              <path d="M70,450 Q120,448 150,58" fill="none" stroke="#9B1C1C" stroke-width="3"/>
+              <!-- labels -->
+              <text x="150" y="48" text-anchor="middle" font-family="Inter, sans-serif" font-weight="600" font-size="19" fill="#9B1C1C">O(2ⁿ)</text>
+              <text x="360" y="50" text-anchor="middle" font-family="Inter, sans-serif" font-weight="600" font-size="19" fill="#B45309">O(n²)</text>
+              <text x="434" y="92" font-family="Inter, sans-serif" font-weight="600" font-size="19" fill="#D4820A">O(n log n)</text>
+              <text x="466" y="174" font-family="Inter, sans-serif" font-weight="600" font-size="19" fill="#1E5F8B">O(n)</text>
+              <text x="466" y="368" font-family="Inter, sans-serif" font-weight="600" font-size="19" fill="#065F46">O(log n)</text>
+              <text x="466" y="432" font-family="Inter, sans-serif" font-weight="600" font-size="19" fill="#1A7A4A">O(1)</text>
+            </svg>
+            <div style="flex: 1;">
+              <p>Two programs that produce the same correct output can differ dramatically in
+              <strong>speed</strong> and <strong>memory use</strong> as the input grows.</p>
+              <table style="margin-top: var(--space-5);">
+            <thead>
+              <tr><th>Algorithm</th><th>n = 1,000</th><th>n = 1,000,000</th><th>n = 1,000,000,000</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>O(1)</td><td>1 step</td><td>1 step</td><td>1 step</td></tr>
+              <tr><td>O(log n)</td><td>~10 steps</td><td>~20 steps</td><td>~30 steps</td></tr>
+              <tr><td>O(n)</td><td>1,000 steps</td><td>1,000,000 steps</td><td>1,000,000,000 steps</td></tr>
+              <tr><td>O(n²)</td><td>1,000,000 steps</td><td>10¹² steps</td><td>10¹⁸ steps</td></tr>
+            </tbody>
+          </table>
+          <div class="callout-warn fragment" style="margin-top: var(--space-4);">
+            ⚠ An O(n²) algorithm on 10⁹ elements would take <strong>decades</strong> on modern hardware.
+            Algorithm choice matters more than hardware speed for large inputs.
+          </div>
+            </div>
+          </div>
+        <div class="slide-footer">
+          <span>Lesson 1 — Arrays and Linked Lists</span>
+          <span></span>
+        </div>
+      </div>
+      <aside class="notes">
+        Two programs can give the same correct answer and still be worlds apart in speed once the input grows. Look at the chart and the table together. O(1) stays flat. O(n) grows steadily. But O(n²) explodes — at a billion elements it's 10¹⁸ steps, which would take decades on real hardware. Here's the punchline: buying a faster CPU only helps by a constant factor, but a better algorithm changes the exponent itself. Bubble sort versus merge sort on a billion records — doubling your CPU speed barely moves the needle; the algorithm is what dominates.
+      </aside>
+    </section>
+
+    <!-- B-2: Big-O Notation -->
+    <section>
+      <div class="slide-content">
+        <div class="slide-header">
+          <h2>Big-O Notation</h2>
+        </div>
+        <div class="slide-body">
+          <div class="def">
+            <strong>Big-O — O(g(n))</strong> — An <em>upper bound</em> on the growth rate of a function.
+            We say f(n) = O(g(n)) if there exist positive constants c and n₀ such that
+            f(n) ≤ c · g(n) for all n ≥ n₀.
+          </div>
+          <p style="margin-top: var(--space-5);">In algorithm analysis, <strong>O(g(n))</strong> describes the
+          <strong>worst-case growth rate</strong> of an algorithm's resource use (time or space) as
+          input size <em>n</em> grows toward infinity.</p>
+          <ul style="margin-top: var(--space-4);">
+            <li class="fragment"><strong>Drop constants:</strong> O(3n) = O(n), O(500) = O(1)</li>
+            <li class="fragment"><strong>Drop lower-order terms:</strong> O(n² + n) = O(n²), O(n log n + n) = O(n log n)</li>
+            <li class="fragment"><strong>Focus on the dominant term</strong> — the one that grows fastest as n → ∞</li>
+          </ul>
+          <div class="callout-info fragment" style="margin-top: var(--space-4);">
+            ℹ Big-O is the most commonly used notation in practice because it tells us
+            the <strong>guaranteed worst-case limit</strong> — the most critical bound for system design.
+          </div>
+        </div>
+        <div class="slide-footer">
+          <span>Lesson 1 — Arrays and Linked Lists</span>
+          <span></span>
+        </div>
+      </div>
+      <aside class="notes">
+        Big-O is an upper bound on growth. The formal line says there exist constants c and n-zero so that f(n) stays at or below c times g(n) once n passes that threshold. In plain words: past some point, f never grows faster than g — and we only care about large n, not the small inputs. Two rules fall out of that. Drop constants: O(3n) is still just O(n), proportional to n. Drop lower-order terms: in n² plus n, at n equals a thousand the n² is a million and the n is only a thousand — about a tenth of a percent, so it vanishes. Always keep the dominant term, the one that grows fastest.
+      </aside>
+    </section>
+
+    <!-- B-3: Big-Ω and Big-Θ -->
+    <section>
+      <div class="slide-content">
+        <div class="slide-header">
+          <h2>Big-Ω and Big-Θ Notation</h2>
+        </div>
+        <div class="slide-body">
+          <div class="cols-2">
+            <div>
+              <div class="def">
+                <strong>Big-Ω — Ω(g(n))</strong> — A <em>lower bound</em>.
+                f(n) = Ω(g(n)) means the function grows <em>at least</em> as fast as g(n).
+                Describes the <strong>best-case floor</strong> on resource use.
+              </div>
+              <p style="margin-top: var(--space-4); font-size: var(--t-body-sm);">
+                Example: Linear search is Ω(1) — in the best case, the target is at index 0
+                and only one comparison is needed.
+              </p>
+            </div>
+            <div class="col-divider">
+              <div class="def">
+                <strong>Big-Θ — Θ(g(n))</strong> — A <em>tight bound</em>.
+                f(n) = Θ(g(n)) means the function grows <em>exactly</em> as fast as g(n)
+                (both upper and lower bounds match).
+              </div>
+              <p style="margin-top: var(--space-4); font-size: var(--t-body-sm);">
+                Example: Linear search is Θ(n) — average and worst case both grow linearly.
+                It is also O(n) and Ω(1).
+              </p>
+            </div>
+          </div>
+          <table style="margin-top: var(--space-5);">
+            <thead><tr><th>Notation</th><th>Bound</th><th>Meaning</th><th>Answers the question</th></tr></thead>
+            <tbody>
+              <tr><td><strong>O(g(n))</strong></td><td>Upper</td><td>Grows <em>at most</em> as fast as g(n)</td><td>"How slow can it get?"</td></tr>
+              <tr><td><strong>Ω(g(n))</strong></td><td>Lower</td><td>Grows <em>at least</em> as fast as g(n)</td><td>"How fast can it run?"</td></tr>
+              <tr><td><strong>Θ(g(n))</strong></td><td>Tight</td><td>Grows <em>exactly</em> as fast as g(n)</td><td>"What's the exact rate?"</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="slide-footer">
+          <span>Lesson 1 — Arrays and Linked Lists</span>
+          <span></span>
+        </div>
+      </div>
+      <aside class="notes">
+        Think of an elevator. Big-O is "at most this many floors up" — the upper bound. Big-Omega is "at least this many" — the lower bound, your best case. Big-Theta is "exactly this floor" — when the upper and lower bounds match. Linear search is Omega of 1 in the best case, and Theta of n when average and worst both grow linearly. In day-to-day engineering we mostly use Big-O for worst-case guarantees, Theta when the bound is tight — merge sort is Theta of n log n every single time — and Omega mostly shows up in theoretical lower-bound proofs.
+      </aside>
+    </section>
+
+    <!-- B-4: Complexity Classes -->
+    <section>
+      <div class="slide-content">
+        <div class="slide-header">
+          <h2>Common Complexity Classes</h2>
+        </div>
+        <div class="slide-body">
+          <table>
+            <thead>
+              <tr><th>Class</th><th>Name</th><th>Example</th><th>n = 1,000 (approx.)</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="o1">O(1)</span></td>
+                <td>Constant</td>
+                <td>Array access, hash lookup</td>
+                <td>1 step</td>
+              </tr>
+              <tr>
+                <td><span class="ologn">O(log n)</span></td>
+                <td>Logarithmic</td>
+                <td>Binary search, BST search</td>
+                <td>~10 steps</td>
+              </tr>
+              <tr>
+                <td><span class="on">O(n)</span></td>
+                <td>Linear</td>
+                <td>Linear search, array traversal</td>
+                <td>1,000 steps</td>
+              </tr>
+              <tr>
+                <td><span class="onlogn">O(n log n)</span></td>
+                <td>Linearithmic</td>
+                <td>Merge sort, heap sort</td>
+                <td>~10,000 steps</td>
+              </tr>
+              <tr>
+                <td><span class="on2">O(n²)</span></td>
+                <td>Quadratic</td>
+                <td>Bubble sort, insertion sort (worst)</td>
+                <td>1,000,000 steps</td>
+              </tr>
+              <tr>
+                <td><span class="o2n">O(2ⁿ)</span></td>
+                <td>Exponential</td>
+                <td>Brute-force subset enumeration</td>
+                <td>2¹⁰⁰⁰ — infeasible</td>
+              </tr>
+            </tbody>
+          </table>
+          <p style="font-size: var(--t-body-sm); color: var(--color-text-muted); margin-top: var(--space-3);">
+            Ordered from fastest to slowest growth: O(1) &lt; O(log n) &lt; O(n) &lt; O(n log n) &lt; O(n²) &lt; O(2ⁿ)
+          </p>
+        </div>
+        <div class="slide-footer">
+          <span>Lesson 1 — Arrays and Linked Lists</span>
+          <span></span>
+        </div>
+      </div>
+      <aside class="notes">
+        These six classes are our whole alphabet for the course. A couple of quick gut checks. For O(log n): if I double n, how many more steps? Just one more. For O(n²): double n and you get four times the work, because (2n)² is 4n². So O(1) and O(log n) are what we celebrate; O(n²) and beyond are warning signs for big inputs. And these exact colors show up on every complexity table this semester, so start associating them now.
+      </aside>
+    </section>
+
+    <!-- B-5: Best, Average, and Worst Case -->
+    <section>
+      <div class="slide-content">
+        <div class="slide-header">
+          <h2>Best, Average, and Worst Case</h2>
+        </div>
+        <div class="slide-body">
+          <p>The same algorithm can behave very differently depending on the input.
+          We distinguish three analysis scenarios:</p>
+          <div class="cols-3" style="margin-top: var(--space-5);">
+            <div style="background: var(--color-success-bg); border-radius: 8px; padding: var(--space-4);">
+              <p style="font-weight: 600; color: var(--color-success); margin-bottom: var(--space-3);">Best Case</p>
+              <p style="font-size: var(--t-body-sm);">The most favorable possible input — provides a <strong>lower bound</strong> (Ω) on performance.</p>
+              <p style="font-size: var(--t-body-sm); margin-top: var(--space-3);">
+                <em>Linear search:</em> target at index 0 → <strong>1 comparison</strong>
+              </p>
+            </div>
+            <div style="background: var(--color-info-bg); border-radius: 8px; padding: var(--space-4);">
+              <p style="font-weight: 600; color: var(--color-info); margin-bottom: var(--space-3);">Average Case</p>
+              <p style="font-size: var(--t-body-sm);">Expected performance over all possible inputs — requires probability analysis.</p>
+              <p style="font-size: var(--t-body-sm); margin-top: var(--space-3);">
+                <em>Linear search:</em> target at random position → <strong>~n/2 comparisons</strong>
+              </p>
+            </div>
+            <div style="background: var(--color-danger-bg); border-radius: 8px; padding: var(--space-4);">
+              <p style="font-weight: 600; color: var(--color-danger); margin-bottom: var(--space-3);">Worst Case</p>
+              <p style="font-size: var(--t-body-sm);">The most unfavorable possible input — provides an <strong>upper bound</strong> (O) and is the
+              standard for algorithm design guarantees.</p>
+              <p style="font-size: var(--t-body-sm); margin-top: var(--space-3);">
+                <em>Linear search:</em> target absent or at last index → <strong>n comparisons</strong>
+              </p>
+            </div>
+          </div>
+          <div class="callout-info fragment" style="margin-top: var(--space-4);">
+            ℹ Unless stated otherwise, Big-O in this course refers to the <strong>worst-case</strong> scenario.
+          </div>
+        </div>
+        <div class="slide-footer">
+          <span>Lesson 1 — Arrays and Linked Lists</span>
+          <span></span>
+        </div>
+      </div>
+      <aside class="notes">
+        The same algorithm can behave very differently depending on the input, so we name three scenarios. Best case is the lucky input — linear search finding the target at index 0, one comparison. Average case is the expected behavior over all inputs — roughly n-over-2 comparisons. Worst case is the nightmare input — target absent, all n comparisons. We design for the worst case, because that's the one we have to survive. Why not just the average? Because the worst case really does happen in practice — like always feeding a sorted array to a naive quicksort. So unless I say otherwise, Big-O in this course means worst case.
+      </aside>
+    </section>
+
+    <!-- B-6: Introduction to Recursion -->
+    <section>
+      <div class="slide-content">
+        <div class="slide-header">
+          <h2>Introduction to Recursion</h2>
+        </div>
+        <div class="slide-body">
+          <div class="cols-3-2">
+            <div>
+              <div class="def">
+                <strong>Recursion</strong> — A technique where a function solves a problem by
+                calling itself on a <em>smaller subproblem</em>, until a <strong>base case</strong>
+                is reached that can be solved directly without further recursion.
+              </div>
+              <ul style="margin-top: var(--space-4);">
+                <li class="fragment"><strong>Base case</strong> — the termination condition; prevents infinite recursion</li>
+                <li class="fragment"><strong>Recursive case</strong> — breaks the problem into a smaller version of itself</li>
+                <li class="fragment">Each call is pushed onto the <strong>call stack</strong>; resolved in LIFO order</li>
+                <li class="fragment">Every recursive algorithm can be rewritten iteratively (and vice versa)</li>
+              </ul>
+            </div>
+            <div class="col-divider">
+              <pre><code class="language-cpp" data-trim data-noescape data-line-numbers="1-3|4-6|8-9">
+// Recursive factorial
+int factorial(int n) {
+    if (n == 0) return 1;    // base case
+    return n * factorial(n - 1);
+    // recursive case
+}
+
+// factorial(3) → 3 * factorial(2)
+//              → 3 * 2 * factorial(1)
+//              → 3 * 2 * 1 * factorial(0)
+//              → 3 * 2 * 1 * 1 = 6
+              </code></pre>
+              <p class="code-caption">factorial(3) pushes 4 stack frames before unwinding</p>
+            </div>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <span>Lesson 1 — Arrays and Linked Lists</span>
+          <span></span>
+        </div>
+      </div>
+      <aside class="notes">
+        Recursion is when a function solves a problem by calling itself on a smaller piece, until it hits a base case it can answer directly. Look at factorial. The base case is n equals 0 returns 1 — and what happens if I delete that line? Infinite recursion, stack overflow. The recursive case is n times factorial of n minus 1. Trace factorial of 3: it stacks up 3, then 2, then 1, then 0 — four frames — and then unwinds back down, multiplying as it returns: 1, 1, 2, 6. Hold onto this idea, because merge sort and quicksort next lesson are naturally recursive.
+      </aside>
+    </section>
+
+    <!-- B-7: Recursion vs. Iteration -->
+    <section>
+      <div class="slide-content">
+        <div class="slide-header">
+          <h2>Recursion vs. Iteration</h2>
+        </div>
+        <div class="slide-body">
+          <div class="cols-2">
+            <div>
+              <p style="font-size: var(--t-h4); font-weight: 600; color: var(--color-primary);
+                        margin-bottom: var(--space-3);">Recursive Factorial</p>
+              <pre><code class="language-cpp" data-trim data-noescape>
+int factorial(int n) {
+    if (n == 0) return 1;
+    return n * factorial(n - 1);
+}
+              </code></pre>
+              <ul style="margin-top: var(--space-4);">
+                <li>Elegant and close to the mathematical definition</li>
+                <li>O(n) stack space — one frame per call</li>
+                <li>Stack overflow risk for large <em>n</em></li>
+              </ul>
+            </div>
+            <div class="col-divider">
+              <p style="font-size: var(--t-h4); font-weight: 600; color: var(--color-primary);
+                        margin-bottom: var(--space-3);">Iterative Factorial</p>
+              <pre><code class="language-cpp" data-trim data-noescape>
+int factorial(int n) {
+    int result = 1;
+    for (int i = 2; i &lt;= n; i++)
+        result *= i;
+    return result;
+}
+              </code></pre>
+              <ul style="margin-top: var(--space-4);">
+                <li>Slightly more verbose but no stack overhead</li>
+                <li>O(1) space — single accumulator variable</li>
+                <li>Preferred when recursion depth is large</li>
+              </ul>
+            </div>
+          </div>
+          <div class="callout-success fragment" style="margin-top: var(--space-4);">
+            ✓ Both versions are O(n) time. Choose recursion when it makes the algorithm
+            significantly clearer (e.g., tree traversal, divide-and-conquer sorting).
+            Choose iteration when stack depth is a concern.
+          </div>
+        </div>
+        <div class="slide-footer">
+          <span>Lesson 1 — Arrays and Linked Lists</span>
+          <span></span>
+        </div>
+      </div>
+      <aside class="notes">
+        Same factorial, two ways. The recursive version reads almost like the math definition — n factorial is n times (n minus 1) factorial — but it costs O(n) stack space, one frame per call, and can overflow for large n. The iterative version just multiplies in a loop with O(1) space. Both are O(n) in time, so neither is "better" in the abstract. Use recursion when it makes the code dramatically clearer — tree traversal, divide-and-conquer sorting. Use iteration when stack depth is a real concern. Which one reads more clearly to you for this example?
+      </aside>
+    </section>
+
+    <!-- B-8: Section B Recap -->
+    <section>
+      <div class="slide-content">
+        <div class="slide-header">
+          <h2>Asymptotic Analysis</h2>
+        </div>
+        <div class="slide-body">
+          <div class="recap-block">
+            <ul>
+              <li>✓ Algorithm analysis measures how resource use <strong>scales</strong> with input size</li>
+              <li>✓ <strong>Big-O</strong> = upper bound (worst case); <strong>Big-Ω</strong> = lower bound (best case); <strong>Big-Θ</strong> = tight bound</li>
+              <li>✓ Drop constants and lower-order terms; focus on the <strong>dominant term</strong></li>
+              <li>✓ Complexity classes ordered: O(1) &lt; O(log n) &lt; O(n) &lt; O(n log n) &lt; O(n²) &lt; O(2ⁿ)</li>
+              <li>✓ We analyze <strong>worst case</strong> by default — the guaranteed upper bound</li>
+              <li>✓ <strong>Recursion</strong> solves problems by calling itself on smaller subproblems; requires a base case</li>
+            </ul>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <span>Lesson 1 — Arrays and Linked Lists</span>
+          <span></span>
+        </div>
+      </div>
+      <aside class="notes">
+        Let's lock in Section B. Analysis is about how cost scales with input size. Big-O is the worst-case upper bound, Omega the best-case lower bound, Theta the tight bound. Drop constants and lower-order terms; keep the dominant one. And recursion always needs a base case. Quick question — what class should we aim for in a data-structure operation? O(1) or O(log n) whenever we can. And when is O(n) fair enough? When we genuinely have to touch every element. Now let's meet a structure that fixes the array's O(n) insertion problem — the linked list.
+      </aside>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         SECTION DIVIDER C — Linked Lists
+    ════════════════════════════════════════════════════════════════════ -->
+    <section data-transition="zoom" data-transition-speed="fast"
+             style="background: var(--color-surface-alt);">
+      <div class="section-num">C</div>
+      <div style="display: flex; flex-direction: column; align-items: center;
+                  justify-content: center; height: 100%; gap: var(--space-3);
+                  position: relative; z-index: 1;">
+        <h1 style="font-size: var(--t-h1); font-weight: 700;
+                   color: var(--color-primary); margin: var(--space-6) 0 0 0;
+                   text-align: center; line-height: 1.1;">
+          Linked Lists
+        </h1>
+        <p style="font-size: var(--t-body); color: var(--color-text-muted);
+                  margin: 0 0 var(--space-6) 0; text-align: center; max-width: 900px;">
+          Node structure, pointer management, and operations
+          on singly, doubly, and circular linked lists
+        </p>
+      </div>
+
+      <aside class="notes">
+        Section C: Linked Lists. We'll build up the node structure, walk through singly linked list operations in C++ step by step, then look at doubly and circular variants, and finish with the pointer mistakes that cause most of your bugs.
+      </aside>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         SECTION C SLIDES — Linked Lists
+    ════════════════════════════════════════════════════════════════════ -->
+
+    <!-- C-1: What Is a Linked List? -->
+    <section>
+      <div class="slide-content">
+        <div class="slide-header">
+          <h2>What Is a Linked List?</h2>
+        </div>
+        <div class="slide-body">
+          <div class="def">
+            <strong>Linked List</strong> — A linear data structure in which elements (called
+            <em>nodes</em>) are stored at non-contiguous memory locations. Each node holds a
+            <strong>data value</strong> and one or more <strong>pointers</strong> to adjacent nodes,
+            forming a chain.
+          </div>
+          <div class="cols-2" style="margin-top: var(--space-5);">
+            <div>
+              <p style="font-size: var(--t-body-sm);">Unlike arrays, linked lists do not require contiguous memory —
+              nodes may be scattered anywhere on the heap.</p>
+              <ul style="margin-top: var(--space-4);">
+                <li class="fragment">No fixed capacity — grows and shrinks dynamically</li>
+                <li class="fragment">Insertion and deletion at the head are <strong>O(1)</strong> — no shifting</li>
+                <li class="fragment">No index-based random access — must traverse from the head</li>
+                <li class="fragment">Each node carries a pointer overhead (4–8 bytes per node)</li>
+              </ul>
+            </div>
+            <div class="col-divider" style="display: flex; flex-direction: column; justify-content: center;">
+              <p style="font-size: var(--t-caption); color: var(--color-text-muted); text-align: center; margin-bottom: var(--space-3);">
+                Singly linked list: 10 → 25 → 7 → 42 → null
+              </p>
+              <table style="text-align: center; font-size: var(--t-label);">
+                <thead><tr><th>Node</th><th>data</th><th>next →</th></tr></thead>
+                <tbody>
+                  <tr><td>head</td><td>10</td><td>node₂</td></tr>
+                  <tr><td>node₂</td><td>25</td><td>node₃</td></tr>
+                  <tr><td>node₃</td><td>7</td><td>node₄</td></tr>
+                  <tr><td>node₄</td><td>42</td><td>null</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <span>Lesson 1 — Arrays and Linked Lists</span>
+          <span></span>
+        </div>
+      </div>
+      <aside class="notes">
+        Imagine a scavenger hunt: each clue only tells you where the next clue is. You can't jump straight to clue four — you have to follow one, two, three, four. That's a linked list. An array, by contrast, is a numbered list on one sheet — you can jump straight to item four. So the trade-off is already visible: linked lists handle changing size beautifully, but you give up that instant random access. And each node carries a little pointer overhead — a few bytes — for the privilege.
+      </aside>
+    </section>
+
+    <!-- C-2: Node Structure in C++ -->
+    <section>
+      <div class="slide-content">
+        <div class="slide-header">
+          <h2>Node Structure in C++</h2>
+        </div>
+        <div class="slide-body">
+          <pre><code class="language-cpp" data-trim data-noescape data-line-numbers="1-5|7-9|11-14">
+// A singly linked list node
+struct Node {
+    int data;      // the stored value
+    Node* next;    // pointer to the next node (nullptr if tail)
+};
+
+// Creating nodes on the heap
+Node* a = new Node{10, nullptr};
+Node* b = new Node{25, nullptr};
+
+// Linking nodes: 10 → 25 → null
+a->next = b;
+// head points to the first node
+Node* head = a;
+          </code></pre>
+          <p class="code-caption">Nodes are dynamically allocated; <code>next</code> is <code>nullptr</code> for the tail node</p>
+          <div class="callout-warn fragment" style="margin-top: var(--space-4);">
+            ⚠ Every <code>new</code> must be paired with a <code>delete</code> when the node is removed.
+            Failing to do so causes a <strong>memory leak</strong>.
+          </div>
+        </div>
+        <div class="slide-footer">
+          <span>Lesson 1 — Arrays and Linked Lists</span>
+          <span></span>
+        </div>
+      </div>
+      <aside class="notes">
+        Here's a node in C++. Two fields: data, and next — a pointer to another node of the same type. When we call new Node, we're allocating on the heap and getting back a pointer. Then a-arrow-next equals b links node A to node B. Quick check: what's a-arrow-next-arrow-data? It's 25 — that's pointer chasing, hopping from one node to the next. And nullptr is our end-of-list marker; it's the sentinel that tells traversal where to stop. One warning already on the slide: every new needs a matching delete, or you leak memory.
+      </aside>
+    </section>
+
+    <!-- C-3: SLL Insert at Head -->
+    <section>
+      <div class="slide-content">
+        <div class="slide-header">
+          <h2>Singly Linked List: Insert at Head</h2>
+        </div>
+        <div class="slide-body">
+          <div class="r-stack" style="align-items:flex-start;height:100%;">
+
+            <!-- ═══ Frame 1 — lines 1,2: allocate new node ═══ -->
+            <div class="fragment fade-out" data-fragment-index="0" style="width:100%;">
+              <div class="cols-3-2">
+                <div>
+                  <pre><code class="language-cpp" data-trim data-noescape data-line-numbers="1,2">void insertHead(Node*&amp; head, int val) {
+    Node* newNode = new Node{val, nullptr};  // 1. allocate new node
+    newNode->next = head;                    // 2. point new node to old head
+    head = newNode;                          // 3. update head pointer
+}
+// Result: newNode → (old head) → … → null</code></pre>
+                  <p class="code-caption">Three pointer operations, regardless of list length — <strong>O(1)</strong></p>
+                </div>
+                <div class="col-divider">
+                  <p style="font-size:var(--t-label);font-weight:600;color:var(--color-accent);letter-spacing:0.1em;text-transform:uppercase;margin:0 0 var(--space-4) 0;">Step 1 — Allocate new node</p>
+                  <div style="display:flex;align-items:center;gap:4px;margin-bottom:var(--space-4);">
+                    <span style="font-family:'Fira Code',monospace;font-size:18px;font-weight:600;color:var(--color-accent);min-width:95px;">newNode</span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-accent);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-accent);border-radius:6px;overflow:hidden;">
+                      <span style="padding:6px 14px;background:var(--color-accent-light);font-family:'Fira Code',monospace;font-weight:700;font-size:20px;color:var(--color-accent);">5</span>
+                      <span style="padding:6px 10px;border-left:2px solid var(--color-accent);font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);">next</span>
+                    </span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-text-muted);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-border);border-radius:6px;padding:6px 12px;font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);background:var(--color-surface-alt);">null</span>
+                  </div>
+                  <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;">
+                    <span style="font-family:'Fira Code',monospace;font-size:18px;font-weight:600;color:var(--color-primary);min-width:95px;">head</span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-primary);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-primary);border-radius:6px;overflow:hidden;">
+                      <span style="padding:6px 12px;background:var(--color-primary-pale);font-family:'Fira Code',monospace;font-weight:700;font-size:20px;color:var(--color-primary);">10</span>
+                      <span style="padding:6px 8px;border-left:2px solid var(--color-primary);font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);">next</span>
+                    </span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-text-muted);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-primary);border-radius:6px;overflow:hidden;">
+                      <span style="padding:6px 12px;background:var(--color-primary-pale);font-family:'Fira Code',monospace;font-weight:700;font-size:20px;color:var(--color-primary);">25</span>
+                      <span style="padding:6px 8px;border-left:2px solid var(--color-primary);font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);">next</span>
+                    </span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-text-muted);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-border);border-radius:6px;padding:6px 12px;font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);background:var(--color-surface-alt);">null</span>
+                  </div>
+                  <p style="font-size:var(--t-caption);color:var(--color-text-muted);margin-top:var(--space-3);font-style:italic;">New node on the heap; <code>head</code> and the existing list are unchanged.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- ═══ Frame 2 — line 3: newNode->next = head ═══ -->
+            <div class="fragment fade-in-then-out" data-fragment-index="0" style="width:100%;">
+              <div class="cols-3-2">
+                <div>
+                  <pre><code class="language-cpp" data-trim data-noescape data-line-numbers="3">void insertHead(Node*&amp; head, int val) {
+    Node* newNode = new Node{val, nullptr};  // 1. allocate new node
+    newNode->next = head;                    // 2. point new node to old head
+    head = newNode;                          // 3. update head pointer
+}
+// Result: newNode → (old head) → … → null</code></pre>
+                  <p class="code-caption">Three pointer operations, regardless of list length — <strong>O(1)</strong></p>
+                </div>
+                <div class="col-divider">
+                  <p style="font-size:var(--t-label);font-weight:600;color:var(--color-accent);letter-spacing:0.1em;text-transform:uppercase;margin:0 0 var(--space-4) 0;">Step 2 — newNode-&gt;next = head</p>
+                  <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin-bottom:var(--space-4);">
+                    <span style="font-family:'Fira Code',monospace;font-size:18px;font-weight:600;color:var(--color-accent);min-width:95px;">newNode</span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-accent);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-accent);border-radius:6px;overflow:hidden;">
+                      <span style="padding:6px 14px;background:var(--color-accent-light);font-family:'Fira Code',monospace;font-weight:700;font-size:20px;color:var(--color-accent);">5</span>
+                      <span style="padding:6px 10px;border-left:2px solid var(--color-accent);font-family:'Fira Code',monospace;font-size:16px;color:var(--color-success);font-weight:600;">next ✓</span>
+                    </span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-text-muted);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-primary);border-radius:6px;overflow:hidden;">
+                      <span style="padding:6px 12px;background:var(--color-primary-pale);font-family:'Fira Code',monospace;font-weight:700;font-size:20px;color:var(--color-primary);">10</span>
+                      <span style="padding:6px 8px;border-left:2px solid var(--color-primary);font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);">next</span>
+                    </span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-text-muted);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-primary);border-radius:6px;overflow:hidden;">
+                      <span style="padding:6px 12px;background:var(--color-primary-pale);font-family:'Fira Code',monospace;font-weight:700;font-size:20px;color:var(--color-primary);">25</span>
+                      <span style="padding:6px 8px;border-left:2px solid var(--color-primary);font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);">next</span>
+                    </span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-text-muted);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-border);border-radius:6px;padding:6px 12px;font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);background:var(--color-surface-alt);">null</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:4px;">
+                    <span style="font-family:'Fira Code',monospace;font-size:18px;font-weight:600;color:var(--color-primary);min-width:95px;">head</span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-primary);">→</span>
+                    <span style="font-family:'Fira Code',monospace;font-size:18px;color:var(--color-text-muted);">[10] — still unchanged</span>
+                  </div>
+                  <p style="font-size:var(--t-caption);color:var(--color-text-muted);margin-top:var(--space-3);font-style:italic;">Link <code>newNode</code> first — if <code>head</code> moved first, the old list would be lost.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- ═══ Frame 3 — line 4: head = newNode ═══ -->
+            <div class="fragment fade-in-then-out" data-fragment-index="1" style="width:100%;">
+              <div class="cols-3-2">
+                <div>
+                  <pre><code class="language-cpp" data-trim data-noescape data-line-numbers="4">void insertHead(Node*&amp; head, int val) {
+    Node* newNode = new Node{val, nullptr};  // 1. allocate new node
+    newNode->next = head;                    // 2. point new node to old head
+    head = newNode;                          // 3. update head pointer
+}
+// Result: newNode → (old head) → … → null</code></pre>
+                  <p class="code-caption">Three pointer operations, regardless of list length — <strong>O(1)</strong></p>
+                </div>
+                <div class="col-divider">
+                  <p style="font-size:var(--t-label);font-weight:600;color:var(--color-accent);letter-spacing:0.1em;text-transform:uppercase;margin:0 0 var(--space-4) 0;">Step 3 — head = newNode</p>
+                  <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;">
+                    <span style="font-family:'Fira Code',monospace;font-size:18px;font-weight:600;color:var(--color-primary);min-width:55px;">head</span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-primary);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-accent);border-radius:6px;overflow:hidden;">
+                      <span style="padding:6px 14px;background:var(--color-accent-light);font-family:'Fira Code',monospace;font-weight:700;font-size:20px;color:var(--color-accent);">5</span>
+                      <span style="padding:6px 10px;border-left:2px solid var(--color-accent);font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);">next</span>
+                    </span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-text-muted);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-primary);border-radius:6px;overflow:hidden;">
+                      <span style="padding:6px 12px;background:var(--color-primary-pale);font-family:'Fira Code',monospace;font-weight:700;font-size:20px;color:var(--color-primary);">10</span>
+                      <span style="padding:6px 8px;border-left:2px solid var(--color-primary);font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);">next</span>
+                    </span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-text-muted);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-primary);border-radius:6px;overflow:hidden;">
+                      <span style="padding:6px 12px;background:var(--color-primary-pale);font-family:'Fira Code',monospace;font-weight:700;font-size:20px;color:var(--color-primary);">25</span>
+                      <span style="padding:6px 8px;border-left:2px solid var(--color-primary);font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);">next</span>
+                    </span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-text-muted);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-border);border-radius:6px;padding:6px 12px;font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);background:var(--color-surface-alt);">null</span>
+                  </div>
+                  <p style="font-size:var(--t-caption);color:var(--color-text-muted);margin-top:var(--space-3);font-style:italic;"><code>head</code> now points to <code>newNode</code>. Node [5] leads the list.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- ═══ Frame 4 — lines 5,6: result ═══ -->
+            <div class="fragment fade-in" data-fragment-index="2" style="width:100%;">
+              <div class="cols-3-2">
+                <div>
+                  <pre><code class="language-cpp" data-trim data-noescape data-line-numbers="5,6">void insertHead(Node*&amp; head, int val) {
+    Node* newNode = new Node{val, nullptr};  // 1. allocate new node
+    newNode->next = head;                    // 2. point new node to old head
+    head = newNode;                          // 3. update head pointer
+}
+// Result: newNode → (old head) → … → null</code></pre>
+                  <p class="code-caption">Three pointer operations, regardless of list length — <strong>O(1)</strong></p>
+                </div>
+                <div class="col-divider">
+                  <p style="font-size:var(--t-label);font-weight:600;color:var(--color-success);letter-spacing:0.1em;text-transform:uppercase;margin:0 0 var(--space-4) 0;">Done ✓ — O(1) time</p>
+                  <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin-bottom:var(--space-4);">
+                    <span style="font-family:'Fira Code',monospace;font-size:18px;font-weight:600;color:var(--color-primary);min-width:55px;">head</span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-primary);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-accent);border-radius:6px;overflow:hidden;">
+                      <span style="padding:6px 14px;background:var(--color-accent-light);font-family:'Fira Code',monospace;font-weight:700;font-size:20px;color:var(--color-accent);">5</span>
+                      <span style="padding:6px 10px;border-left:2px solid var(--color-accent);font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);">next</span>
+                    </span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-text-muted);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-primary);border-radius:6px;overflow:hidden;">
+                      <span style="padding:6px 12px;background:var(--color-primary-pale);font-family:'Fira Code',monospace;font-weight:700;font-size:20px;color:var(--color-primary);">10</span>
+                      <span style="padding:6px 8px;border-left:2px solid var(--color-primary);font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);">next</span>
+                    </span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-text-muted);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-primary);border-radius:6px;overflow:hidden;">
+                      <span style="padding:6px 12px;background:var(--color-primary-pale);font-family:'Fira Code',monospace;font-weight:700;font-size:20px;color:var(--color-primary);">25</span>
+                      <span style="padding:6px 8px;border-left:2px solid var(--color-primary);font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);">next</span>
+                    </span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-text-muted);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-border);border-radius:6px;padding:6px 12px;font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);background:var(--color-surface-alt);">null</span>
+                  </div>
+                  <div class="callout-success">✓ Allocate → link → reassign: 3 constant-time pointer operations regardless of list length.</div>
+                  <table style="margin-top:var(--space-4);">
+                    <thead><tr><th>Case</th><th>Time</th><th>Aux. Space</th></tr></thead>
+                    <tbody><tr><td>Any</td><td><span class="o1">O(1)</span></td><td><span class="o1">O(1)</span></td></tr></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="slide-footer">
+          <span>Lesson 1 — Arrays and Linked Lists</span>
+          <span></span>
+        </div>
+      </div>
+      <aside class="notes">
+        Insert at head — three steps, and the order is everything. Step one, allocate the new node. Step two — and this is the critical one — point the new node's next at the current head, before you touch head. Step three, move head to the new node. Now why must step two come first? Because the instant you do head equals newNode, head stops pointing at the old first node — and if you hadn't saved that link yet, the entire rest of the list is gone. Three pointer operations, no traversal, so this is O(1) no matter how long the list is.
+      </aside>
+    </section>
+
+    <!-- C-4: SLL Insert at Tail -->
+    <section>
+      <div class="slide-content">
+        <div class="slide-header">
+          <h2>Singly Linked List: Insert at Tail</h2>
+        </div>
+        <div class="slide-body">
+          <div class="r-stack" style="align-items:flex-start;height:100%;">
+
+            <!-- ═══ Frame 1 — lines 1,2: allocate new node ═══ -->
+            <div class="fragment fade-out" data-fragment-index="0" style="width:100%;">
+              <div class="cols-3-2">
+                <div>
+                  <pre><code class="language-cpp" data-trim data-noescape data-line-numbers="1,2">void insertTail(Node*&amp; head, int val) {
+    Node* newNode = new Node{val, nullptr};
+    if (head == nullptr) {              // empty list edge case
+        head = newNode; return;
+    }
+    Node* curr = head;
+    while (curr->next != nullptr)       // traverse to the last node
+        curr = curr->next;
+    curr->next = newNode;               // link last node to new node
+}
+// Time: O(n) — must traverse entire list to reach the tail</code></pre>
+                  <p class="code-caption">Without a <code>tail</code> pointer, inserting at the tail requires a full traversal</p>
+                </div>
+                <div class="col-divider">
+                  <p style="font-size:var(--t-label);font-weight:600;color:var(--color-accent);letter-spacing:0.1em;text-transform:uppercase;margin:0 0 var(--space-4) 0;">Step 1 — Allocate new node</p>
+                  <div style="display:flex;align-items:center;gap:4px;margin-bottom:var(--space-4);">
+                    <span style="font-family:'Fira Code',monospace;font-size:18px;font-weight:600;color:var(--color-accent);min-width:95px;">newNode</span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-accent);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-accent);border-radius:6px;overflow:hidden;">
+                      <span style="padding:6px 14px;background:var(--color-accent-light);font-family:'Fira Code',monospace;font-weight:700;font-size:20px;color:var(--color-accent);">5</span>
+                      <span style="padding:6px 10px;border-left:2px solid var(--color-accent);font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);">next</span>
+                    </span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-text-muted);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-border);border-radius:6px;padding:6px 12px;font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);background:var(--color-surface-alt);">null</span>
+                  </div>
+                  <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;">
+                    <span style="font-family:'Fira Code',monospace;font-size:18px;font-weight:600;color:var(--color-primary);min-width:95px;">head</span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-primary);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-primary);border-radius:6px;overflow:hidden;">
+                      <span style="padding:6px 12px;background:var(--color-primary-pale);font-family:'Fira Code',monospace;font-weight:700;font-size:20px;color:var(--color-primary);">10</span>
+                      <span style="padding:6px 8px;border-left:2px solid var(--color-primary);font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);">next</span>
+                    </span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-text-muted);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-primary);border-radius:6px;overflow:hidden;">
+                      <span style="padding:6px 12px;background:var(--color-primary-pale);font-family:'Fira Code',monospace;font-weight:700;font-size:20px;color:var(--color-primary);">25</span>
+                      <span style="padding:6px 8px;border-left:2px solid var(--color-primary);font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);">next</span>
+                    </span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-text-muted);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-border);border-radius:6px;padding:6px 12px;font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);background:var(--color-surface-alt);">null</span>
+                  </div>
+                  <p style="font-size:var(--t-caption);color:var(--color-text-muted);margin-top:var(--space-3);font-style:italic;">New node on the heap; existing list is untouched.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- ═══ Frame 2 — lines 3-5: edge case check ═══ -->
+            <div class="fragment fade-in-then-out" data-fragment-index="0" style="width:100%;">
+              <div class="cols-3-2">
+                <div>
+                  <pre><code class="language-cpp" data-trim data-noescape data-line-numbers="3-5">void insertTail(Node*&amp; head, int val) {
+    Node* newNode = new Node{val, nullptr};
+    if (head == nullptr) {              // empty list edge case
+        head = newNode; return;
+    }
+    Node* curr = head;
+    while (curr->next != nullptr)       // traverse to the last node
+        curr = curr->next;
+    curr->next = newNode;               // link last node to new node
+}
+// Time: O(n) — must traverse entire list to reach the tail</code></pre>
+                  <p class="code-caption">Without a <code>tail</code> pointer, inserting at the tail requires a full traversal</p>
+                </div>
+                <div class="col-divider">
+                  <p style="font-size:var(--t-label);font-weight:600;color:var(--color-accent);letter-spacing:0.1em;text-transform:uppercase;margin:0 0 var(--space-4) 0;">Step 2 — Edge-case check</p>
+                  <div style="display:flex;align-items:center;gap:4px;margin-bottom:var(--space-3);">
+                    <span style="font-family:'Fira Code',monospace;font-size:18px;font-weight:600;color:var(--color-primary);min-width:95px;">head</span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-primary);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-primary);border-radius:6px;overflow:hidden;">
+                      <span style="padding:6px 12px;background:var(--color-primary-pale);font-family:'Fira Code',monospace;font-weight:700;font-size:20px;color:var(--color-primary);">10</span>
+                      <span style="padding:6px 8px;border-left:2px solid var(--color-primary);font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);">next</span>
+                    </span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-text-muted);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-primary);border-radius:6px;overflow:hidden;">
+                      <span style="padding:6px 12px;background:var(--color-primary-pale);font-family:'Fira Code',monospace;font-weight:700;font-size:20px;color:var(--color-primary);">25</span>
+                      <span style="padding:6px 8px;border-left:2px solid var(--color-primary);font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);">next</span>
+                    </span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-text-muted);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-border);border-radius:6px;padding:6px 12px;font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);background:var(--color-surface-alt);">null</span>
+                  </div>
+                  <div class="callout-warn" style="font-size:var(--t-caption);">head ≠ null &nbsp;→&nbsp; list is non-empty; edge-case branch is <strong>skipped</strong>.</div>
+                  <p style="font-size:var(--t-caption);color:var(--color-text-muted);margin-top:var(--space-3);font-style:italic;">If <code>head == nullptr</code>, we would have set <code>head = newNode</code> and returned immediately.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- ═══ Frame 3 — lines 6-8: traverse to last node ═══ -->
+            <div class="fragment fade-in-then-out" data-fragment-index="1" style="width:100%;">
+              <div class="cols-3-2">
+                <div>
+                  <pre><code class="language-cpp" data-trim data-noescape data-line-numbers="6-8">void insertTail(Node*&amp; head, int val) {
+    Node* newNode = new Node{val, nullptr};
+    if (head == nullptr) {              // empty list edge case
+        head = newNode; return;
+    }
+    Node* curr = head;
+    while (curr->next != nullptr)       // traverse to the last node
+        curr = curr->next;
+    curr->next = newNode;               // link last node to new node
+}
+// Time: O(n) — must traverse entire list to reach the tail</code></pre>
+                  <p class="code-caption">Without a <code>tail</code> pointer, inserting at the tail requires a full traversal</p>
+                </div>
+                <div class="col-divider">
+                  <p style="font-size:var(--t-label);font-weight:600;color:var(--color-accent);letter-spacing:0.1em;text-transform:uppercase;margin:0 0 var(--space-4) 0;">Step 3 — Traverse to last node</p>
+                  <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin-bottom:var(--space-3);">
+                    <span style="font-family:'Fira Code',monospace;font-size:18px;font-weight:600;color:var(--color-primary);min-width:55px;">head</span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-primary);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-primary);border-radius:6px;overflow:hidden;">
+                      <span style="padding:6px 12px;background:var(--color-primary-pale);font-family:'Fira Code',monospace;font-weight:700;font-size:20px;color:var(--color-primary);">10</span>
+                      <span style="padding:6px 8px;border-left:2px solid var(--color-primary);font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);">next</span>
+                    </span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-text-muted);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-primary);border-radius:6px;overflow:hidden;">
+                      <span style="padding:6px 12px;background:var(--color-primary-pale);font-family:'Fira Code',monospace;font-weight:700;font-size:20px;color:var(--color-primary);">25</span>
+                      <span style="padding:6px 8px;border-left:2px solid var(--color-primary);font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);">next</span>
+                    </span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-text-muted);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-border);border-radius:6px;padding:6px 12px;font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);background:var(--color-surface-alt);">null</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:4px;">
+                    <span style="font-family:'Fira Code',monospace;font-size:18px;font-weight:600;color:var(--color-accent);min-width:55px;">curr</span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-accent);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-accent);border-radius:6px;overflow:hidden;">
+                      <span style="padding:6px 12px;background:var(--color-accent-light);font-family:'Fira Code',monospace;font-weight:700;font-size:20px;color:var(--color-accent);">25</span>
+                      <span style="padding:6px 10px;border-left:2px solid var(--color-accent);font-family:'Fira Code',monospace;font-size:16px;color:var(--color-success);font-weight:600;">next ✓</span>
+                    </span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-text-muted);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-border);border-radius:6px;padding:6px 12px;font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);background:var(--color-surface-alt);">null</span>
+                  </div>
+                  <p style="font-size:var(--t-caption);color:var(--color-text-muted);margin-top:var(--space-3);font-style:italic;"><code>curr</code> stops at [25] because <code>curr-&gt;next == null</code> — that is the last node.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- ═══ Frame 4 — lines 9-11: link + result ═══ -->
+            <div class="fragment fade-in" data-fragment-index="2" style="width:100%;">
+              <div class="cols-3-2">
+                <div>
+                  <pre><code class="language-cpp" data-trim data-noescape data-line-numbers="9-11">void insertTail(Node*&amp; head, int val) {
+    Node* newNode = new Node{val, nullptr};
+    if (head == nullptr) {              // empty list edge case
+        head = newNode; return;
+    }
+    Node* curr = head;
+    while (curr->next != nullptr)       // traverse to the last node
+        curr = curr->next;
+    curr->next = newNode;               // link last node to new node
+}
+// Time: O(n) — must traverse entire list to reach the tail</code></pre>
+                  <p class="code-caption">Without a <code>tail</code> pointer, inserting at the tail requires a full traversal</p>
+                </div>
+                <div class="col-divider">
+                  <p style="font-size:var(--t-label);font-weight:600;color:var(--color-success);letter-spacing:0.1em;text-transform:uppercase;margin:0 0 var(--space-4) 0;">Done ✓ — O(n) time</p>
+                  <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin-bottom:var(--space-4);">
+                    <span style="font-family:'Fira Code',monospace;font-size:18px;font-weight:600;color:var(--color-primary);min-width:55px;">head</span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-primary);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-primary);border-radius:6px;overflow:hidden;">
+                      <span style="padding:6px 12px;background:var(--color-primary-pale);font-family:'Fira Code',monospace;font-weight:700;font-size:20px;color:var(--color-primary);">10</span>
+                      <span style="padding:6px 8px;border-left:2px solid var(--color-primary);font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);">next</span>
+                    </span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-text-muted);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-primary);border-radius:6px;overflow:hidden;">
+                      <span style="padding:6px 12px;background:var(--color-primary-pale);font-family:'Fira Code',monospace;font-weight:700;font-size:20px;color:var(--color-primary);">25</span>
+                      <span style="padding:6px 8px;border-left:2px solid var(--color-primary);font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);">next</span>
+                    </span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-text-muted);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-accent);border-radius:6px;overflow:hidden;">
+                      <span style="padding:6px 14px;background:var(--color-accent-light);font-family:'Fira Code',monospace;font-weight:700;font-size:20px;color:var(--color-accent);">5</span>
+                      <span style="padding:6px 10px;border-left:2px solid var(--color-accent);font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);">next</span>
+                    </span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-text-muted);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-border);border-radius:6px;padding:6px 12px;font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);background:var(--color-surface-alt);">null</span>
+                  </div>
+                  <div class="callout-info" style="margin-bottom:var(--space-3);">ℹ Keeping a separate <code>tail</code> pointer reduces insert-at-tail to <strong>O(1)</strong> — the standard optimization for queue implementations.</div>
+                  <table>
+                    <thead><tr><th>Case</th><th>Time</th><th>Aux. Space</th></tr></thead>
+                    <tbody><tr><td>Any (no tail ptr)</td><td><span class="on">O(n)</span></td><td><span class="o1">O(1)</span></td></tr></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="slide-footer">
+          <span>Lesson 1 — Arrays and Linked Lists</span>
+          <span></span>
+        </div>
+      </div>
+      <aside class="notes">
+        Inserting at the tail. First thing — allocate the node and handle the empty-list case right away; always deal with edge cases first. Then we walk: curr keeps moving forward while curr-arrow-next isn't null, which lands us on the last node. Link that node's next to our new node, and we're done. Because we had to walk the whole list, this is O(n). But — what if we kept a tail pointer alongside head? Then we'd jump straight to the end and do this in O(1). That's exactly the trick queues use, which we'll cover in Module 2.
+      </aside>
+    </section>
+
+    <!-- C-5: SLL Delete a Node -->
+    <section>
+      <div class="slide-content">
+        <div class="slide-header">
+          <h2>Singly Linked List: Delete a Node</h2>
+        </div>
+        <div class="slide-body">
+          <div class="r-stack" style="align-items:flex-start;height:100%;">
+
+            <!-- ═══ Frame 1 — lines 1,2: empty-list check ═══ -->
+            <div class="fragment fade-out" data-fragment-index="0" style="width:100%;">
+              <div class="cols-3-2">
+                <div>
+                  <pre><code class="language-cpp" data-trim data-noescape data-line-numbers="1,2">void deleteByValue(Node*&amp; head, int val) {
+    if (head == nullptr) return;         // empty list
+    if (head->data == val) {             // delete head node
+        Node* temp = head;
+        head = head->next;
+        delete temp; return;
+    }
+    Node* prev = head;
+    while (prev->next != nullptr &amp;&amp; prev->next->data != val)
+        prev = prev->next;              // find node before target
+    if (prev->next == nullptr) return;  // value not found
+    Node* target = prev->next;
+    prev->next = target->next;          // bypass the target node
+    delete target;                      // free memory
+}
+// Time: O(n) search + O(1) re-link = O(n) overall</code></pre>
+                  <p class="code-caption">Re-link the predecessor's <code>next</code> to skip the target, then <code>delete</code> the node</p>
+                </div>
+                <div class="col-divider">
+                  <p style="font-size:var(--t-label);font-weight:600;color:var(--color-accent);letter-spacing:0.1em;text-transform:uppercase;margin:0 0 var(--space-4) 0;">Step 1 — Empty-list check</p>
+                  <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin-bottom:var(--space-3);">
+                    <span style="font-family:'Fira Code',monospace;font-size:18px;font-weight:600;color:var(--color-primary);min-width:55px;">head</span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-primary);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-primary);border-radius:6px;overflow:hidden;">
+                      <span style="padding:6px 12px;background:var(--color-primary-pale);font-family:'Fira Code',monospace;font-weight:700;font-size:20px;color:var(--color-primary);">10</span>
+                      <span style="padding:6px 8px;border-left:2px solid var(--color-primary);font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);">next</span>
+                    </span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-text-muted);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-primary);border-radius:6px;overflow:hidden;">
+                      <span style="padding:6px 12px;background:var(--color-primary-pale);font-family:'Fira Code',monospace;font-weight:700;font-size:20px;color:var(--color-primary);">25</span>
+                      <span style="padding:6px 8px;border-left:2px solid var(--color-primary);font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);">next</span>
+                    </span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-text-muted);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-primary);border-radius:6px;overflow:hidden;">
+                      <span style="padding:6px 12px;background:var(--color-primary-pale);font-family:'Fira Code',monospace;font-weight:700;font-size:20px;color:var(--color-primary);">7</span>
+                      <span style="padding:6px 8px;border-left:2px solid var(--color-primary);font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);">next</span>
+                    </span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-text-muted);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-border);border-radius:6px;padding:6px 12px;font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);background:var(--color-surface-alt);">null</span>
+                  </div>
+                  <div class="callout-warn" style="font-size:var(--t-caption);">head ≠ null &nbsp;→&nbsp; list is non-empty; empty-list check <strong>passed</strong>.</div>
+                  <p style="font-size:var(--t-caption);color:var(--color-text-muted);margin-top:var(--space-3);font-style:italic;">Call: <code>deleteByValue(head, 25)</code></p>
+                </div>
+              </div>
+            </div>
+
+            <!-- ═══ Frame 2 — lines 3-7: head-deletion check ═══ -->
+            <div class="fragment fade-in-then-out" data-fragment-index="0" style="width:100%;">
+              <div class="cols-3-2">
+                <div>
+                  <pre><code class="language-cpp" data-trim data-noescape data-line-numbers="3-7">void deleteByValue(Node*&amp; head, int val) {
+    if (head == nullptr) return;         // empty list
+    if (head->data == val) {             // delete head node
+        Node* temp = head;
+        head = head->next;
+        delete temp; return;
+    }
+    Node* prev = head;
+    while (prev->next != nullptr &amp;&amp; prev->next->data != val)
+        prev = prev->next;              // find node before target
+    if (prev->next == nullptr) return;  // value not found
+    Node* target = prev->next;
+    prev->next = target->next;          // bypass the target node
+    delete target;                      // free memory
+}
+// Time: O(n) search + O(1) re-link = O(n) overall</code></pre>
+                  <p class="code-caption">Re-link the predecessor's <code>next</code> to skip the target, then <code>delete</code> the node</p>
+                </div>
+                <div class="col-divider">
+                  <p style="font-size:var(--t-label);font-weight:600;color:var(--color-accent);letter-spacing:0.1em;text-transform:uppercase;margin:0 0 var(--space-4) 0;">Step 2 — Head-deletion check</p>
+                  <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin-bottom:var(--space-3);">
+                    <span style="font-family:'Fira Code',monospace;font-size:18px;font-weight:600;color:var(--color-primary);min-width:55px;">head</span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-primary);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-primary);border-radius:6px;overflow:hidden;">
+                      <span style="padding:6px 12px;background:var(--color-primary-pale);font-family:'Fira Code',monospace;font-weight:700;font-size:20px;color:var(--color-primary);">10</span>
+                      <span style="padding:6px 8px;border-left:2px solid var(--color-primary);font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);">next</span>
+                    </span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-text-muted);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-primary);border-radius:6px;overflow:hidden;">
+                      <span style="padding:6px 12px;background:var(--color-primary-pale);font-family:'Fira Code',monospace;font-weight:700;font-size:20px;color:var(--color-primary);">25</span>
+                      <span style="padding:6px 8px;border-left:2px solid var(--color-primary);font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);">next</span>
+                    </span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-text-muted);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-primary);border-radius:6px;overflow:hidden;">
+                      <span style="padding:6px 12px;background:var(--color-primary-pale);font-family:'Fira Code',monospace;font-weight:700;font-size:20px;color:var(--color-primary);">7</span>
+                      <span style="padding:6px 8px;border-left:2px solid var(--color-primary);font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);">next</span>
+                    </span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-text-muted);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-border);border-radius:6px;padding:6px 12px;font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);background:var(--color-surface-alt);">null</span>
+                  </div>
+                  <div class="callout-warn" style="font-size:var(--t-caption);">head-&gt;data == 10 ≠ 25 &nbsp;→&nbsp; head is <strong>not</strong> the target; branch skipped.</div>
+                  <p style="font-size:var(--t-caption);color:var(--color-text-muted);margin-top:var(--space-3);font-style:italic;">If <code>head-&gt;data == val</code>, we would save head in <code>temp</code>, advance head, and <code>delete temp</code>.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- ═══ Frame 3 — lines 8-12: find predecessor + target ═══ -->
+            <div class="fragment fade-in-then-out" data-fragment-index="1" style="width:100%;">
+              <div class="cols-3-2">
+                <div>
+                  <pre><code class="language-cpp" data-trim data-noescape data-line-numbers="8-12">void deleteByValue(Node*&amp; head, int val) {
+    if (head == nullptr) return;         // empty list
+    if (head->data == val) {             // delete head node
+        Node* temp = head;
+        head = head->next;
+        delete temp; return;
+    }
+    Node* prev = head;
+    while (prev->next != nullptr &amp;&amp; prev->next->data != val)
+        prev = prev->next;              // find node before target
+    if (prev->next == nullptr) return;  // value not found
+    Node* target = prev->next;
+    prev->next = target->next;          // bypass the target node
+    delete target;                      // free memory
+}
+// Time: O(n) search + O(1) re-link = O(n) overall</code></pre>
+                  <p class="code-caption">Re-link the predecessor's <code>next</code> to skip the target, then <code>delete</code> the node</p>
+                </div>
+                <div class="col-divider">
+                  <p style="font-size:var(--t-label);font-weight:600;color:var(--color-accent);letter-spacing:0.1em;text-transform:uppercase;margin:0 0 var(--space-4) 0;">Step 3 — Find predecessor &amp; target</p>
+                  <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin-bottom:var(--space-3);">
+                    <span style="font-family:'Fira Code',monospace;font-size:18px;font-weight:600;color:var(--color-primary);min-width:55px;">head</span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-primary);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-primary);border-radius:6px;overflow:hidden;">
+                      <span style="padding:6px 12px;background:var(--color-primary-pale);font-family:'Fira Code',monospace;font-weight:700;font-size:20px;color:var(--color-primary);">10</span>
+                      <span style="padding:6px 8px;border-left:2px solid var(--color-primary);font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);">next</span>
+                    </span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-text-muted);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-danger);border-radius:6px;overflow:hidden;">
+                      <span style="padding:6px 12px;background:var(--color-danger-bg);font-family:'Fira Code',monospace;font-weight:700;font-size:20px;color:var(--color-danger);">25</span>
+                      <span style="padding:6px 8px;border-left:2px solid var(--color-danger);font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);">next</span>
+                    </span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-text-muted);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-primary);border-radius:6px;overflow:hidden;">
+                      <span style="padding:6px 12px;background:var(--color-primary-pale);font-family:'Fira Code',monospace;font-weight:700;font-size:20px;color:var(--color-primary);">7</span>
+                      <span style="padding:6px 8px;border-left:2px solid var(--color-primary);font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);">next</span>
+                    </span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-text-muted);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-border);border-radius:6px;padding:6px 12px;font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);background:var(--color-surface-alt);">null</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:4px;margin-bottom:var(--space-2);">
+                    <span style="font-family:'Fira Code',monospace;font-size:18px;font-weight:600;color:var(--color-accent);min-width:55px;">prev</span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-accent);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-accent);border-radius:6px;overflow:hidden;">
+                      <span style="padding:6px 12px;background:var(--color-accent-light);font-family:'Fira Code',monospace;font-weight:700;font-size:20px;color:var(--color-accent);">10</span>
+                      <span style="padding:6px 10px;border-left:2px solid var(--color-accent);font-family:'Fira Code',monospace;font-size:16px;color:var(--color-success);font-weight:600;">next ✓</span>
+                    </span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:4px;">
+                    <span style="font-family:'Fira Code',monospace;font-size:18px;font-weight:600;color:var(--color-danger);min-width:55px;">target</span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-danger);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-danger);border-radius:6px;overflow:hidden;">
+                      <span style="padding:6px 12px;background:var(--color-danger-bg);font-family:'Fira Code',monospace;font-weight:700;font-size:20px;color:var(--color-danger);">25</span>
+                      <span style="padding:6px 8px;border-left:2px solid var(--color-danger);font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);">next</span>
+                    </span>
+                  </div>
+                  <p style="font-size:var(--t-caption);color:var(--color-text-muted);margin-top:var(--space-3);font-style:italic;"><code>prev</code> is the predecessor of <code>target</code> — the node whose <code>next</code> we will rewire.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- ═══ Frame 4 — lines 13-16: bypass + delete + result ═══ -->
+            <div class="fragment fade-in" data-fragment-index="2" style="width:100%;">
+              <div class="cols-3-2">
+                <div>
+                  <pre><code class="language-cpp" data-trim data-noescape data-line-numbers="13-16">void deleteByValue(Node*&amp; head, int val) {
+    if (head == nullptr) return;         // empty list
+    if (head->data == val) {             // delete head node
+        Node* temp = head;
+        head = head->next;
+        delete temp; return;
+    }
+    Node* prev = head;
+    while (prev->next != nullptr &amp;&amp; prev->next->data != val)
+        prev = prev->next;              // find node before target
+    if (prev->next == nullptr) return;  // value not found
+    Node* target = prev->next;
+    prev->next = target->next;          // bypass the target node
+    delete target;                      // free memory
+}
+// Time: O(n) search + O(1) re-link = O(n) overall</code></pre>
+                  <p class="code-caption">Re-link the predecessor's <code>next</code> to skip the target, then <code>delete</code> the node</p>
+                </div>
+                <div class="col-divider">
+                  <p style="font-size:var(--t-label);font-weight:600;color:var(--color-success);letter-spacing:0.1em;text-transform:uppercase;margin:0 0 var(--space-4) 0;">Done ✓ — O(n) time</p>
+                  <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin-bottom:var(--space-4);">
+                    <span style="font-family:'Fira Code',monospace;font-size:18px;font-weight:600;color:var(--color-primary);min-width:55px;">head</span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-primary);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-primary);border-radius:6px;overflow:hidden;">
+                      <span style="padding:6px 12px;background:var(--color-primary-pale);font-family:'Fira Code',monospace;font-weight:700;font-size:20px;color:var(--color-primary);">10</span>
+                      <span style="padding:6px 8px;border-left:2px solid var(--color-primary);font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);">next</span>
+                    </span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-text-muted);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-primary);border-radius:6px;overflow:hidden;">
+                      <span style="padding:6px 12px;background:var(--color-primary-pale);font-family:'Fira Code',monospace;font-weight:700;font-size:20px;color:var(--color-primary);">7</span>
+                      <span style="padding:6px 8px;border-left:2px solid var(--color-primary);font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);">next</span>
+                    </span>
+                    <span style="margin:0 4px;font-size:20px;color:var(--color-text-muted);">→</span>
+                    <span style="display:inline-flex;border:2px solid var(--color-border);border-radius:6px;padding:6px 12px;font-family:'Fira Code',monospace;font-size:16px;color:var(--color-text-muted);background:var(--color-surface-alt);">null</span>
+                  </div>
+                  <div class="callout-success" style="margin-bottom:var(--space-3);">✓ <code>prev-&gt;next = target-&gt;next</code> bypasses [25]; <code>delete target</code> frees the heap memory.</div>
+                  <table>
+                    <thead><tr><th>Case</th><th>Time</th><th>Aux. Space</th></tr></thead>
+                    <tbody>
+                      <tr><td>Best (head match)</td><td><span class="o1">O(1)</span></td><td><span class="o1">O(1)</span></td></tr>
+                      <tr><td>Average / Worst</td><td><span class="on">O(n)</span></td><td><span class="o1">O(1)</span></td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="slide-footer">
+          <span>Lesson 1 — Arrays and Linked Lists</span>
+          <span></span>
+        </div>
+      </div>
+      <aside class="notes">
+        Deletion has the most moving parts. First, the edge cases: empty list, and deleting the head itself. For the head, save it in a temp, advance head, then delete temp — never delete before you've advanced, or you lose the list. Otherwise, we find the predecessor — the node whose next points at our target. Then we re-link: prev-arrow-next jumps over the target to target-arrow-next, and we delete the target to free its memory. On the board: A to B to C, deleting B means A points to C, then delete B. The search is what makes it O(n); the actual re-link is O(1).
+      </aside>
+    </section>
+
+    <!-- C-6: SLL Traverse -->
+    <section>
+      <div class="slide-content">
+        <div class="slide-header">
+          <h2>Singly Linked List: Traversal</h2>
+        </div>
+        <div class="slide-body">
+          <pre><code class="language-cpp" data-trim data-noescape data-line-numbers="1-4|5-7|9-14">
+// Print all values in the list
+void traverse(Node* head) {
+    Node* curr = head;              // start at the head
+    while (curr != nullptr) {
+        std::cout &lt;&lt; curr->data &lt;&lt; " ";
+        curr = curr->next;          // advance to next node
+    }
+}
+// Search for a value; returns pointer or nullptr
+Node* search(Node* head, int val) {
+    for (Node* curr = head; curr != nullptr; curr = curr->next)
+        if (curr->data == val)
+            return curr;
+    return nullptr;
+}
+          </code></pre>
+          <p class="code-caption">Both operations visit every node in sequence — <strong>O(n)</strong></p>
+          <table style="margin-top: var(--space-4);">
+            <thead><tr><th>Operation</th><th>Best</th><th>Average</th><th>Worst</th></tr></thead>
+            <tbody>
+              <tr><td>Traverse (print all)</td><td><span class="on">O(n)</span></td><td><span class="on">O(n)</span></td><td><span class="on">O(n)</span></td></tr>
+              <tr><td>Search by value</td><td><span class="o1">O(1)</span></td><td><span class="on">O(n)</span></td><td><span class="on">O(n)</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="slide-footer">
+          <span>Lesson 1 — Arrays and Linked Lists</span>
+          <span></span>
+        </div>
+      </div>
+      <aside class="notes">
+        This traversal pattern is the linked-list idiom you'll use in literally every exercise from here on. Start curr at head. Print, then advance with curr equals curr-arrow-next. Stop when curr hits nullptr. Search is the same walk, just with an early return when you find the value. Both visit every node, so both are O(n). Try tracing it yourself on the 10, 25, 7, 42 list — call traverse on head and follow curr all the way to null.
+      </aside>
+    </section>
+
+    <!-- C-7: SLL Complexity Summary -->
+    <section>
+      <div class="slide-content">
+        <div class="slide-header">
+          <h2>Singly Linked List: Complexity Summary</h2>
+        </div>
+        <div class="slide-body">
+          <table>
+            <thead>
+              <tr>
+                <th>Operation</th>
+                <th>Best Case</th>
+                <th>Average Case</th>
+                <th>Worst Case</th>
+                <th>Space (aux.)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Insert at head</td>
+                <td><span class="o1">O(1)</span></td>
+                <td><span class="o1">O(1)</span></td>
+                <td><span class="o1">O(1)</span></td>
+                <td><span class="o1">O(1)</span></td>
+              </tr>
+              <tr>
+                <td>Insert at tail (no tail ptr)</td>
+                <td><span class="on">O(n)</span></td>
+                <td><span class="on">O(n)</span></td>
+                <td><span class="on">O(n)</span></td>
+                <td><span class="o1">O(1)</span></td>
+              </tr>
+              <tr>
+                <td>Insert at tail (with tail ptr)</td>
+                <td><span class="o1">O(1)</span></td>
+                <td><span class="o1">O(1)</span></td>
+                <td><span class="o1">O(1)</span></td>
+                <td><span class="o1">O(1)</span></td>
+              </tr>
+              <tr>
+                <td>Delete by value</td>
+                <td><span class="o1">O(1)</span></td>
+                <td><span class="on">O(n)</span></td>
+                <td><span class="on">O(n)</span></td>
+                <td><span class="o1">O(1)</span></td>
+              </tr>
+              <tr>
+                <td>Search by value</td>
+                <td><span class="o1">O(1)</span></td>
+                <td><span class="on">O(n)</span></td>
+                <td><span class="on">O(n)</span></td>
+                <td><span class="o1">O(1)</span></td>
+              </tr>
+              <tr>
+                <td>Traverse (all nodes)</td>
+                <td><span class="on">O(n)</span></td>
+                <td><span class="on">O(n)</span></td>
+                <td><span class="on">O(n)</span></td>
+                <td><span class="o1">O(1)</span></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="callout-success" style="margin-top: var(--space-4);">
+            ✓ The key advantage over arrays: <strong>O(1) head insertion and deletion</strong> — no shifting.
+          </div>
+        </div>
+        <div class="slide-footer">
+          <span>Lesson 1 — Arrays and Linked Lists</span>
+          <span></span>
+        </div>
+      </div>
+      <aside class="notes">
+        Hold this table next to the array table from Section A. Arrays win on access — O(1) versus O(n), because linked lists have no random access at all. But linked lists win on head insert and delete — O(1) versus the array's O(n). That's the whole bargain in two lines. One question to set up the next slide: how would you build a browser's back-and-forward history? You'd want to move both directions cheaply — and that's exactly what the doubly linked list gives us.
+      </aside>
+    </section>
+
+    <!-- C-8: Doubly Linked List -->
+    <section>
+      <div class="slide-content">
+        <div class="slide-header">
+          <h2>Doubly Linked List</h2>
+        </div>
+        <div class="slide-body">
+          <div class="cols-3-2">
+            <div>
+              <div class="def">
+                <strong>Doubly Linked List (DLL)</strong> — A linked list in which each node
+                holds pointers to both the <em>next</em> and <em>previous</em> nodes, enabling
+                traversal in both directions.
+              </div>
+              <pre style="margin-top: var(--space-4);"><code class="language-cpp" data-trim data-noescape data-line-numbers="1-6|8-11">
+struct DNode {
+    int data;
+    DNode* next;     // pointer to next node
+    DNode* prev;     // pointer to previous node
+};
+// null ← [10] ⇄ [25] ⇄ [7] → null
+
+// Delete a node (no predecessor search needed)
+void deleteNode(DNode*&amp; head, DNode* target) {
+    if (target->prev) target->prev->next = target->next;
+    else head = target->next;          // target was head
+    if (target->next) target->next->prev = target->prev;
+    delete target;
+}
+              </code></pre>
+            </div>
+            <div class="col-divider">
+              <h3 style="margin-bottom: var(--space-3);">DLL vs. SLL</h3>
+              <table>
+                <thead><tr><th>Feature</th><th>SLL</th><th>DLL</th></tr></thead>
+                <tbody>
+                  <tr><td>Delete known node</td><td><span class="on">O(n)</span></td><td><span class="o1">O(1)</span></td></tr>
+                  <tr><td>Reverse traversal</td><td>Not supported</td><td><span class="on">O(n)</span></td></tr>
+                  <tr><td>Memory per node</td><td>1 pointer</td><td>2 pointers</td></tr>
+                  <tr><td>Insert at head/tail</td><td><span class="o1">O(1)</span></td><td><span class="o1">O(1)</span></td></tr>
+                </tbody>
+              </table>
+              <div class="callout-info fragment" style="margin-top: var(--space-4);">
+                ℹ <code>std::list&lt;T&gt;</code> in C++ STL is a doubly linked list.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <span>Lesson 1 — Arrays and Linked Lists</span>
+          <span></span>
+        </div>
+      </div>
+      <aside class="notes">
+        A doubly linked list adds a second pointer — prev — so each node knows both its neighbors. Watch what that buys us on delete: because we can reach the predecessor directly through prev, deleting a known node is O(1) — no traversal at all. That's the big win over a singly linked list. The cost is an extra pointer per node, so more memory. By the way, std::list in the C++ standard library is exactly this. Real-world fits? Browser history, undo-redo in an editor, previous-and-next track in a music player.
+      </aside>
+    </section>
+
+    <!-- C-9: Circular Linked List -->
+    <section>
+      <div class="slide-content">
+        <div class="slide-header">
+          <h2>Circular Linked List</h2>
+        </div>
+        <div class="slide-body">
+          <div class="cols-2">
+            <div>
+              <div class="def">
+                <strong>Circular Linked List</strong> — A linked list in which the tail node's
+                <code>next</code> pointer points back to the <strong>head</strong> (instead of
+                <code>nullptr</code>), forming a closed loop with no natural end.
+              </div>
+              <ul style="margin-top: var(--space-4);">
+                <li class="fragment">Traversal must use a stop condition other than <code>nullptr</code></li>
+                <li class="fragment">Can be singly or doubly linked</li>
+                <li class="fragment">Every node has equal access to all others — no privileged "start"</li>
+              </ul>
+              <div class="callout-warn fragment" style="margin-top: var(--space-4);">
+                ⚠ A naive traversal loop without a stop condition will run <strong>infinitely</strong>
+                on a circular list.
+              </div>
+            </div>
+            <div class="col-divider" style="display: flex; flex-direction: column; justify-content: center; gap: var(--space-4);">
+              <p style="font-size: var(--t-caption); color: var(--color-text-muted); text-align: center;">Circular singly linked list</p>
+              <table style="text-align: center; font-size: var(--t-label);">
+                <thead><tr><th>Node</th><th>data</th><th>next →</th></tr></thead>
+                <tbody>
+                  <tr><td>head</td><td>10</td><td>node₂</td></tr>
+                  <tr><td>node₂</td><td>25</td><td>node₃</td></tr>
+                  <tr><td>node₃</td><td>7</td><td><strong>head</strong> ↩</td></tr>
+                </tbody>
+              </table>
+              <p style="font-size: var(--t-body-sm); margin-top: var(--space-3);">
+                <strong>Use cases:</strong> Round-robin task scheduling, circular buffer, game turn rotation
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <span>Lesson 1 — Arrays and Linked Lists</span>
+          <span></span>
+        </div>
+      </div>
+      <aside class="notes">
+        In a circular list, the last node's next loops back to the head instead of pointing to null — so there's no natural end. Think of a round-robin scheduler: each process gets a time slice, then the next one in the circle, and after the last one we're back at the first. A circular list models that perfectly. But notice the danger — if you traverse it the usual way, checking for null, you'll loop forever, because there is no null. So your stop condition has to be "have I arrived back at head?" — a do-while, or a check after the first step. It can also be doubly circular. Used for round-robin scheduling, circular buffers, turn rotation in games.
+      </aside>
+    </section>
+
+    <!-- C-10: Pointer Management Pitfalls -->
+    <section>
+      <div class="slide-content">
+        <div class="slide-header">
+          <h2>Pointer Management Pitfalls</h2>
+        </div>
+        <div class="slide-body">
+          <div class="cols-2">
+            <div>
+              <div class="callout-danger">
+                ✕ <strong>Dangling Pointer</strong> — Accessing a node after it has been deleted.
+                <pre style="margin-top: var(--space-3);"><code class="language-cpp" data-trim data-noescape>
+Node* p = head;
+delete p;
+p->data;  // undefined behavior!
+                </code></pre>
+                <p style="margin-top: var(--space-2); font-size: var(--t-label);">Fix: Set <code>p = nullptr</code> immediately after <code>delete p</code>.</p>
+              </div>
+              <div class="callout-danger" style="margin-top: var(--space-3);">
+                ✕ <strong>Memory Leak</strong> — Losing all pointers to a node without deleting it.
+                <pre style="margin-top: var(--space-3);"><code class="language-cpp" data-trim data-noescape>
+head = head->next; // old head is now orphaned
+// its memory is never freed!
+                </code></pre>
+                <p style="margin-top: var(--space-2); font-size: var(--t-label);">Fix: Store old head in <code>temp</code>, advance, then <code>delete temp</code>.</p>
+              </div>
+            </div>
+            <div class="col-divider">
+              <div class="callout-danger">
+                ✕ <strong>Null Dereference</strong> — Dereferencing a <code>nullptr</code> pointer.
+                <pre style="margin-top: var(--space-3);"><code class="language-cpp" data-trim data-noescape>
+Node* curr = head;
+while (curr->next != nullptr)  // crashes if head == nullptr!
+    curr = curr->next;
+                </code></pre>
+                <p style="margin-top: var(--space-2); font-size: var(--t-label);">Fix: Always check <code>if (head == nullptr)</code> before dereferencing.</p>
+              </div>
+              <div class="callout-warn" style="margin-top: var(--space-3);">
+                ⚠ <strong>Wrong Order of Pointer Updates</strong> — Overwriting a pointer before
+                saving the value it holds causes permanent data loss.
+                <p style="margin-top: var(--space-2); font-size: var(--t-label);">Always save existing pointer values before overwriting them.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <span>Lesson 1 — Arrays and Linked Lists</span>
+          <span></span>
+        </div>
+      </div>
+      <aside class="notes">
+        These four bugs cause most of the linked-list pain you're about to experience. A dangling pointer — using a node after you deleted it — crashes you; the fix is to set the pointer to nullptr right after delete. A memory leak — dropping your only pointer to a node without freeing it — is silent; the program keeps running but bleeds heap memory. A null dereference — touching next when the pointer is null — crashes; so always check for null first. And wrong update order silently loses data. The thread through all of them: C++ has no garbage collector. Every new needs a delete, and every pointer gets checked before you use it.
+      </aside>
+    </section>
+
+    <!-- C-11: Section C Recap -->
+    <section>
+      <div class="slide-content">
+        <div class="slide-header">
+          <h2>Linked Lists</h2>
+        </div>
+        <div class="slide-body">
+          <div class="recap-block">
+            <ul>
+              <li>✓ Linked lists store nodes at <strong>non-contiguous</strong> memory addresses linked by pointers</li>
+              <li>✓ Each node holds a <code>data</code> field and a <code>next</code> pointer (plus <code>prev</code> for DLL)</li>
+              <li>✓ <strong>Insert/delete at head</strong> is O(1) — no shifting required</li>
+              <li>✓ <strong>Search and tail insertion</strong> (without tail pointer) are O(n) — requires traversal</li>
+              <li>✓ <strong>DLL</strong> enables O(1) deletion of a known node and bidirectional traversal</li>
+              <li>✓ <strong>Circular linked list</strong> has no null tail — traversal must check for cycle completion</li>
+              <li>✓ Always check for <code>nullptr</code>, pair every <code>new</code> with <code>delete</code>, and save pointers before overwriting</li>
+            </ul>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <span>Lesson 1 — Arrays and Linked Lists</span>
+          <span></span>
+        </div>
+      </div>
+      <aside class="notes">
+        Section C in a nutshell. Nodes scattered in memory, linked by pointers; head insert and delete are O(1); search and tail insert without a tail pointer are O(n); doubly linked lists add a prev pointer for O(1) deletion and reverse traversal; circular lists have no null tail. So — the one operation where linked lists clearly beat arrays? Head insert and delete. And where arrays clearly win? Random access by index. Now let's put both side by side and decide when to use which.
+      </aside>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         SECTION DIVIDER D — Arrays vs. Linked Lists
+    ════════════════════════════════════════════════════════════════════ -->
+    <section data-transition="zoom" data-transition-speed="fast"
+             style="background: var(--color-surface-alt);">
+      <div class="section-num">D</div>
+      <div style="display: flex; flex-direction: column; align-items: center;
+                  justify-content: center; height: 100%; gap: var(--space-3);
+                  position: relative; z-index: 1;">
+        <h1 style="font-size: var(--t-h1); font-weight: 700;
+                   color: var(--color-primary); margin: var(--space-6) 0 0 0;
+                   text-align: center; line-height: 1.1;">
+          Arrays vs. Linked Lists
+        </h1>
+        <p style="font-size: var(--t-body); color: var(--color-text-muted);
+                  margin: 0 0 var(--space-6) 0; text-align: center; max-width: 900px;">
+          Comparing time complexity, space, cache behavior,
+          and when to choose each structure
+        </p>
+      </div>
+
+      <aside class="notes">
+        Final section: Arrays versus Linked Lists. Now that you know both structures inside out, we'll lay them next to each other across every major operation, look at space and cache behavior, build a decision guide, and then you'll put it into practice with our first hands-on activity.
+      </aside>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         SECTION D SLIDES — Arrays vs. Linked Lists
+    ════════════════════════════════════════════════════════════════════ -->
+
+    <!-- D-1: Time Complexity Comparison -->
+    <section>
+      <div class="slide-content">
+        <div class="slide-header">
+          <h2>Arrays vs. Linked Lists: Time Complexity</h2>
+        </div>
+        <div class="slide-body">
+          <table>
+            <thead>
+              <tr>
+                <th>Operation</th>
+                <th>Array</th>
+                <th>Singly Linked List</th>
+                <th>Winner</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Access by index</td>
+                <td><span class="o1">O(1)</span></td>
+                <td><span class="on">O(n)</span></td>
+                <td>Array ✓</td>
+              </tr>
+              <tr>
+                <td>Search by value (unsorted)</td>
+                <td><span class="on">O(n)</span></td>
+                <td><span class="on">O(n)</span></td>
+                <td>Tie</td>
+              </tr>
+              <tr>
+                <td>Insert at head</td>
+                <td><span class="on">O(n)</span></td>
+                <td><span class="o1">O(1)</span></td>
+                <td>Linked List ✓</td>
+              </tr>
+              <tr>
+                <td>Insert at tail</td>
+                <td><span class="o1">O(1)</span></td>
+                <td><span class="o1">O(1)</span> <em>*</em></td>
+                <td>Tie <em>*</em></td>
+              </tr>
+              <tr>
+                <td>Insert at arbitrary index <em>i</em></td>
+                <td><span class="on">O(n)</span></td>
+                <td><span class="on">O(n)</span></td>
+                <td>Tie</td>
+              </tr>
+              <tr>
+                <td>Delete at head</td>
+                <td><span class="on">O(n)</span></td>
+                <td><span class="o1">O(1)</span></td>
+                <td>Linked List ✓</td>
+              </tr>
+              <tr>
+                <td>Delete at arbitrary index <em>i</em></td>
+                <td><span class="on">O(n)</span></td>
+                <td><span class="on">O(n)</span></td>
+                <td>Tie</td>
+              </tr>
+            </tbody>
+          </table>
+          <p style="font-size: var(--t-caption); color: var(--color-text-muted); margin-top: var(--space-3);">
+            * SLL insert-at-tail is O(1) only when a <code>tail</code> pointer is maintained.
+            Without it, O(n) traversal is required.
+          </p>
+        </div>
+        <div class="slide-footer">
+          <span>Lesson 1 — Arrays and Linked Lists</span>
+          <span></span>
+        </div>
+      </div>
+      <aside class="notes">
+        Here's the head-to-head. The pattern is clean: arrays dominate on random access, linked lists dominate on head insert and delete, and almost everything else is a tie at O(n). Let me put it to you as workloads. If your app reads elements by position ninety percent of the time — which one? Array. If it's constantly adding and removing from the front? Linked list. There's no universal winner; it depends entirely on what your program does most.
+      </aside>
+    </section>
+
+    <!-- D-2: Space Complexity and Cache Behavior -->
+    <section>
+      <div class="slide-content">
+        <div class="slide-header">
+          <h2>Space Complexity and Cache Behavior</h2>
+        </div>
+        <div class="slide-body">
+          <div class="cols-2">
+            <div>
+              <p style="font-size: var(--t-h4); font-weight: 600; color: var(--color-primary); margin-bottom: var(--space-3);">Space (Total)</p>
+              <table>
+                <thead><tr><th>Structure</th><th>Space</th><th>Notes</th></tr></thead>
+                <tbody>
+                  <tr><td>Array of <em>n</em> elements</td><td><span class="on">O(n)</span></td><td>Pure data, no overhead per element</td></tr>
+                  <tr><td>SLL of <em>n</em> nodes</td><td><span class="on">O(n)</span></td><td>+1 pointer (8 bytes) per node</td></tr>
+                  <tr><td>DLL of <em>n</em> nodes</td><td><span class="on">O(n)</span></td><td>+2 pointers (16 bytes) per node</td></tr>
+                </tbody>
+              </table>
+              <p style="font-size: var(--t-body-sm); margin-top: var(--space-4);">
+                Both are O(n) — but the <strong>constant factor</strong> differs.
+                For <code>int</code> (4 bytes): a SLL node uses 4 + 8 = 12 bytes,
+                so pointers account for 67% of each node's memory.
+              </p>
+            </div>
+            <div class="col-divider">
+              <p style="font-size: var(--t-h4); font-weight: 600; color: var(--color-primary); margin-bottom: var(--space-3);">Cache Behavior</p>
+              <div class="callout-success">
+                ✓ <strong>Arrays</strong> — Contiguous memory → excellent <strong>spatial locality</strong>.
+                Adjacent elements are loaded together into the CPU cache.
+                Sequential access is very fast in practice.
+              </div>
+              <div class="callout-warn" style="margin-top: var(--space-3);">
+                ⚠ <strong>Linked Lists</strong> — Nodes scattered in heap memory → poor spatial locality.
+                Each node dereference may cause a <strong>cache miss</strong>, fetching from main RAM.
+                Practical performance is often much slower than O-notation suggests.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <span>Lesson 1 — Arrays and Linked Lists</span>
+          <span></span>
+        </div>
+      </div>
+      <aside class="notes">
+        Now the difference that Big-O hides. Both are O(n) in space, but the constant factor differs — a linked-list int node spends two-thirds of its bytes just on the pointer. The bigger story is cache. Arrays are contiguous, so neighbors load into cache together and sequential access flies. Linked-list nodes are scattered, so each hop can be a cache miss — and a cache miss is expensive: L1 cache is around four cycles, main RAM around two hundred. So two operations in the same O(n) class can differ by five to ten times in real life. That's the real reason arrays and vectors usually win in performance-critical code.
+      </aside>
+    </section>
+
+    <!-- D-3: Use-Case Decision Guide -->
+    <section>
+      <div class="slide-content">
+        <div class="slide-header">
+          <h2>Use-Case Decision Guide</h2>
+        </div>
+        <div class="slide-body">
+          <div class="cols-2">
+            <div style="background: var(--color-primary-pale); border-radius: 8px; padding: var(--space-5);">
+              <p style="font-size: var(--t-h3); font-weight: 600; color: var(--color-primary); margin-bottom: var(--space-4);">Choose an Array when…</p>
+              <ul>
+                <li>You frequently access elements <strong>by index</strong></li>
+                <li>The collection size is <strong>known or bounded</strong> at creation time</li>
+                <li>You need <strong>cache-efficient</strong> sequential processing</li>
+                <li>You perform sorting (contiguous memory aids sort algorithms)</li>
+                <li>Memory overhead matters (no pointer cost per element)</li>
+              </ul>
+            </div>
+            <div style="background: var(--color-surface-alt); border-radius: 8px; padding: var(--space-5); border: 1px solid var(--color-border);">
+              <p style="font-size: var(--t-h3); font-weight: 600; color: var(--color-primary); margin-bottom: var(--space-4);">Choose a Linked List when…</p>
+              <ul>
+                <li>You frequently <strong>insert or delete at the head</strong></li>
+                <li>The collection size is <strong>unpredictable or frequently changes</strong></li>
+                <li>You implement a <strong>stack, queue, or deque</strong> (upcoming modules)</li>
+                <li>You need <strong>O(1) splicing</strong> — inserting a segment into the middle</li>
+                <li>Index-based access is rare or unnecessary</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <span>Lesson 1 — Arrays and Linked Lists</span>
+          <span></span>
+        </div>
+      </div>
+      <aside class="notes">
+        So how do you actually choose? Reach for an array — really, std::vector — when you access by index, when the size is known or bounded, and when you want cache-efficient sequential work. In practice, vector is the default choice in C++. Reach for a linked list when you're constantly inserting or deleting at the head, when the size swings unpredictably, or when you're building a stack or queue. One to think about: a text editor inserting characters anywhere — array or linked list? Honestly, neither; specialized structures like gap buffers or ropes win there. But it shows why plain arrays aren't always the answer.
+      </aside>
+    </section>
+
+    <!-- D-4: TLA 1 — Structure Trace -->
+    <section>
+      <div class="slide-content">
+        <div class="slide-header">
+          <h2>Structure Trace Activity</h2>
+        </div>
+        <div class="slide-body">
+          <div class="cols-3-2">
+            <div>
+              <p>The <strong>Structure Trace</strong> worksheet reinforces today's concepts through hands-on analysis. Complete all three parts individually.</p>
+              <div style="margin-top: var(--space-5);">
+                <p style="font-weight: 600; color: var(--color-primary); margin-bottom: var(--space-2);">Part A — Array Operations</p>
+                <p style="font-size: var(--t-body-sm);">Annotate five C++ code fragments with Big-O time and space complexity. Justify each answer in one sentence referencing the dominant operation.</p>
+              </div>
+              <div style="margin-top: var(--space-4);">
+                <p style="font-weight: 600; color: var(--color-primary); margin-bottom: var(--space-2);">Part B — Linked List Operations</p>
+                <p style="font-size: var(--t-body-sm);">Given a six-node singly linked list, trace four operations (insert head, insert tail, delete by value, traverse) by drawing the list state after each step.</p>
+              </div>
+              <div style="margin-top: var(--space-4);">
+                <p style="font-weight: 600; color: var(--color-primary); margin-bottom: var(--space-2);">Part C — Complexity Comparison</p>
+                <p style="font-size: var(--t-body-sm);">Complete a table comparing array vs. linked list time complexity for six operations.</p>
+              </div>
+            </div>
+            <div class="col-divider" style="display: flex; flex-direction: column; justify-content: center;">
+              <table>
+                <thead><tr><th>Part</th><th>Points</th></tr></thead>
+                <tbody>
+                  <tr><td>Part A — complexity annotations (5 fragments)</td><td>20 pts</td></tr>
+                  <tr><td>Part B — linked list state diagrams (4 ops)</td><td>12 pts</td></tr>
+                  <tr><td>Part C — comparison table</td><td>12 pts</td></tr>
+                  <tr style="font-weight: 600; background: var(--color-primary-pale);">
+                    <td>Total</td><td>44 pts</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="callout-info" style="margin-top: var(--space-4);">
+                ℹ Worksheet distributed via VSU E-Learning Portal.
+                Submit a clear photo or PDF through the designated assignment.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <span>Lesson 1 — Arrays and Linked Lists</span>
+          <span></span>
+        </div>
+      </div>
+      <aside class="notes">
+        Time to put this to work. The Structure Trace worksheet has three parts — annotate code with Big-O, trace linked-list operations by drawing the list after each step, and fill in an array-versus-list comparison table. Part B is where I see the most mistakes: people forget to update a pointer or lose a node, so draw the list carefully after every single step. Part C is just the comparison table we built this section. You'll have about twenty to twenty-five minutes in class; finish anything left over afterward. Grab it on the Portal and submit a clear photo or PDF.
+      </aside>
+    </section>
+
+    <!-- D-5: Lesson 1 Summary -->
+    <section>
+      <div class="slide-content">
+        <div class="slide-header">
+          <h2>Lesson 1 Summary</h2>
+        </div>
+        <div class="slide-body">
+          <div class="recap-block">
+            <div class="cols-2">
+              <div>
+                <p style="font-weight: 600; color: var(--color-primary); margin-bottom: var(--space-3);">ADTs and Arrays</p>
+                <ul style="font-size: var(--t-body-sm);">
+                  <li>✓ ADT = interface without implementation</li>
+                  <li>✓ Array: contiguous memory, O(1) access</li>
+                  <li>✓ Insert/delete at index: O(n) shifting</li>
+                </ul>
+                <p style="font-weight: 600; color: var(--color-primary); margin: var(--space-4) 0 var(--space-3);">Asymptotic Analysis</p>
+                <ul style="font-size: var(--t-body-sm);">
+                  <li>✓ O = upper bound; Ω = lower bound; Θ = tight</li>
+                  <li>✓ Six classes: O(1) through O(2ⁿ)</li>
+                  <li>✓ Recursion needs a base case; all recursive → iterative</li>
+                </ul>
+              </div>
+              <div>
+                <p style="font-weight: 600; color: var(--color-primary); margin-bottom: var(--space-3);">Linked Lists</p>
+                <ul style="font-size: var(--t-body-sm);">
+                  <li>✓ Nodes + pointers; dynamic size</li>
+                  <li>✓ Head insert/delete: O(1); search: O(n)</li>
+                  <li>✓ DLL adds prev pointer; circular has no null tail</li>
+                  <li>✓ Always guard against null dereference and memory leaks</li>
+                </ul>
+                <p style="font-weight: 600; color: var(--color-primary); margin: var(--space-4) 0 var(--space-3);">Comparison</p>
+                <ul style="font-size: var(--t-body-sm);">
+                  <li>✓ Arrays win on random access and cache locality</li>
+                  <li>✓ Linked lists win on head insert/delete</li>
+                  <li>✓ Choose based on your workload's dominant operations</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <span>Lesson 1 — Arrays and Linked Lists</span>
+          <span></span>
+        </div>
+      </div>
+      <aside class="notes">
+        That's the whole lesson on one slide — take a second to read it down. And here's my one ask before we close: notes shut. Name me one operation where arrays beat linked lists, and one where linked lists beat arrays. ... Exactly. Next lesson we take these structures and aim them at a classic problem: sorting. How do you put n elements in order as efficiently as possible? That's Lesson 2.
+      </aside>
+    </section>
+
+
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         LAST SLIDE — END
+    ════════════════════════════════════════════════════════════════════ -->
+    <section data-transition="fade" data-transition-speed="slow"
+             data-state="no-progress-bar"
+             style="background: linear-gradient(135deg, #1B3F6E 0%, #0F2A4A 100%);
+                    color: var(--color-text-on-dark);">
+
+      <!-- VSU Logo placeholder (top-right) -->
+      <!-- <img src="assets/img/vsu-logo-white.svg" alt="Visayas State University logo"
+           style="position: absolute; top: 40px; right: 40px; width: 80px; height: 80px;"> -->
+
+      <div style="display: flex; flex-direction: column; align-items: center;
+                  justify-content: center; height: 100%; gap: var(--space-4);">
+        <h1 style="font-size: var(--t-display); font-weight: 700;
+                   color: var(--color-text-on-dark); margin: 0;
+                   text-align: center; line-height: 1.1; margin-top: var(--space-6);">
+          End of Lesson 1
+        </h1>
+        <hr style="width: 200px; border: none;
+                   border-top: 3px solid var(--color-accent);
+                   margin: var(--space-3) 0;">
+        <p style="font-size: var(--t-body-sm); color: rgba(240,244,248,0.85); margin: 0;">
+          Questions? Office hours or via email:
+        </p>
+        <p style="font-size: var(--t-body-sm); color: var(--color-accent);
+                  margin: 0; font-weight: 500;">
+          jomarijoseph.barrera@vsu.edu.ph
+        </p>
+        <p style="font-size: var(--t-caption); color: rgba(240,244,248,0.5);
+                  margin: var(--space-6) 0 var(--space-6) 0;">
+          CSIT 103 · Data Structures and Algorithms
+        </p>
+      </div>
+
+      <aside class="notes">
+        And that's Lesson 1. Two things before you go: the Structure Trace worksheet — TLA 1 — and Lab Exercise 1 are both coming up, so keep an eye on the Portal. If you want extra practice, VisuAlgo is a great site for visualizing arrays and linked lists. My email's on the screen and I hold office hours — come by anytime. Thanks, everyone.
+      </aside>
+    </section>
+
+  </div><!-- /.slides -->
+</div><!-- /.reveal -->
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5/plugin/highlight/highlight.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5/plugin/notes/notes.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5/plugin/search/search.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5/plugin/math/math.js"></script>
+<script>
+  Reveal.initialize({
+    // ── Viewport ──────────────────────────────────────────────
+    width: 1920,
+    height: 1080,
+    margin: 0.06,
+    minScale: 0.2,
+    maxScale: 2.0,
+
+    // ── Navigation ────────────────────────────────────────────
+    hash: true,
+    history: true,
+    keyboard: true,
+    overview: true,
+    center: true,
+
+    // ── Display ───────────────────────────────────────────────
+    progress: true,
+    slideNumber: 'c/t',
+    showSlideNumber: 'all',
+    controls: true,
+    controlsLayout: 'bottom-right',
+    controlsBackArrows: 'faded',
+
+    // ── Transitions ───────────────────────────────────────────
+    transition: 'slide',
+    transitionSpeed: 'default',
+    backgroundTransition: 'fade',
+
+    // ── Fragments ─────────────────────────────────────────────
+    fragments: true,
+    fragmentInURL: false,
+
+    // ── Misc ──────────────────────────────────────────────────
+    preloadIframes: null,
+    autoPlayMedia: false,
+    loop: false,
+    touch: true,
+
+    // ── Plugins ───────────────────────────────────────────────
+    plugins: [ RevealHighlight, RevealNotes, RevealSearch, RevealMath.KaTeX ]
+  });
+</script>
+</body>
+</html>
