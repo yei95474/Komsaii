@@ -55,23 +55,20 @@ void insertAtHead(SLLNode*& head, int value) {
     SLLNode* temp = new SLLNode(value);
     temp->next = head;
     head = temp;
+    // TODO: implement
 }
 
 // ── insertAtTail ─────────────────────────────────────────────
 // Creates a new node with value and appends it after the last node.
 // If the list is empty, the new node becomes head.
 void insertAtTail(SLLNode*& head, int value) {
-    SLLNode* temp = new SLLNode(value);
-    if (head == nullptr) {
-        head = temp;
-        return;
-    }
-
     SLLNode* tail = head;
     while (tail->next != nullptr) {
         tail = tail->next;
     }
+    SLLNode* temp = new SLLNode(value);
     tail->next = temp;
+    // TODO: implement
 }
 
 // ── deleteByValue ────────────────────────────────────────────
@@ -82,13 +79,6 @@ bool deleteByValue(SLLNode*& head, int value) {
     if (head == nullptr) {
         return false;
     }
-    if (head->data == value) {
-        SLLNode* temp = head;
-        head = head->next;
-        delete temp;
-        return true;
-    }
-
     SLLNode* prev = head;
     SLLNode* curr = head->next;
     while (curr != nullptr) {
@@ -100,6 +90,7 @@ bool deleteByValue(SLLNode*& head, int value) {
         prev=curr;
         curr=curr->next;
     }
+    // TODO: implement
     return false;
 }
 
@@ -107,11 +98,12 @@ bool deleteByValue(SLLNode*& head, int value) {
 // Returns true if any node's data equals target; false otherwise.
 bool search(SLLNode* head, int target) {
     while (head != nullptr) {
-        if (head->data == target) {
+        if(head->data == target) {
             return true;
         }
         head = head->next;
     }
+    // TODO: implement
     return false;
 }
 
@@ -120,20 +112,11 @@ bool search(SLLNode* head, int target) {
 //   v1 -> v2 -> ... -> vN -> NULL
 // Prints "NULL" if the list is empty.
 void display(SLLNode* head) {
-    if (head == nullptr) {
-        cout << "NULL";
-        return;
-    }
-
     while (head != nullptr) {
-        cout << head->data;
-        if (head->next != nullptr) {
-            cout << " -> ";
-        } else {
-            cout << " -> NULL";
-        }
-        head = head->next;
+        cout<< head->data<< " ";
     }
+    cout<<endl;
+    // TODO: implement
 }
 
 // ── main ─────────────────────────────────────────────────────
@@ -142,47 +125,34 @@ int main() {
 
     cout << "=== PART B.1: SINGLY LINKED LIST ===" << endl;
 
-    insertAtHead(head, 10);
-    cout << "insertAtHead(10): ";
-    display(head);
-    cout << endl;
+    // TODO: call insertAtHead(head, 10), then print:
+    //   "insertAtHead(10): "; display(head); cout << endl;
 
-    insertAtHead(head, 5);
-    cout << "insertAtHead(5):  ";
-    display(head);
-    cout << endl;
+    // TODO: call insertAtHead(head, 5), then print:
+    //   "insertAtHead(5):  "; display(head); cout << endl;
 
-    insertAtTail(head, 20);
-    cout << "insertAtTail(20): ";
-    display(head);
-    cout << endl;
+    // TODO: call insertAtTail(head, 20), then print:
+    //   "insertAtTail(20): "; display(head); cout << endl;
 
-    insertAtTail(head, 30);
-    cout << "insertAtTail(30): ";
-    display(head);
-    cout << endl;
+    // TODO: call insertAtTail(head, 30), then print:
+    //   "insertAtTail(30): "; display(head); cout << endl;
 
     cout << endl;
 
-    cout << "search(20): " << (search(head, 20) ? "found" : "not found") << endl;
+    // TODO: call search(head, 20) and print the result.
+    //   When found:     "search(20): found" << endl
+    //   When not found: "search(20): not found" << endl
 
-    cout << "search(99): " << (search(head, 99) ? "found" : "not found") << endl;
+    // TODO: call search(head, 99) and print the result.
+    //   Same format as above.
 
     cout << endl;
 
-    deleteByValue(head, 10);
-    cout << "deleteByValue(10): ";
-    display(head);
-    cout << endl;
+    // TODO: call deleteByValue(head, 10), then print:
+    //   "deleteByValue(10): "; display(head); cout << endl;
 
-    cout << "deleteByValue(99): "
-         << (deleteByValue(head, 99) ? "deleted" : "not found") << endl;
-
-    while (head != nullptr) {
-        SLLNode* temp = head;
-        head = head->next;
-        delete temp;
-    }
+    // TODO: call deleteByValue(head, 99) and print the result.
+    //   When not found: "deleteByValue(99): not found" << endl
 
     return 0;
 }
