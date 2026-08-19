@@ -1,9 +1,0 @@
-START
-Data C, F, K
-Display Enter C
-Input C
-
-F:=(9/5)*C+32
-K:=C+273.15
-
-Display: Farenheit: F, Kelvin: K

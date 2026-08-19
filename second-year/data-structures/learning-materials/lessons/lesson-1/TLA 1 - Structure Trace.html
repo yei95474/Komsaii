@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TLA 1 — Structure Trace · CSIT 103</title>
+  <meta name="author" content="Jomari Joseph A. Barrera">
+  <meta name="description" content="CSIT 103 TLA 1: Structure Trace — Arrays and Linked Lists. Visayas State University.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    /* ── CSS Custom Properties ── */
+    :root {
+      --color-primary:       #1B3F6E;
+      --color-primary-light: #2E5FA3;
+      --color-primary-pale:  #D6E4F7;
+      --color-accent:        #D4820A;
+      --color-accent-light:  #FFF0CC;
+      --color-success:       #1A7A4A;
+      --color-success-bg:    #D4EDDA;
+      --color-warning:       #B45309;
+      --color-warning-bg:    #FEF3C7;
+      --color-danger:        #9B1C1C;
+      --color-danger-bg:     #FCDEDE;
+      --color-info:          #1E5F8B;
+      --color-info-bg:       #DBEAFE;
+      --color-bg:            #FAFAFA;
+      --color-surface:       #FFFFFF;
+      --color-surface-alt:   #F0F4F8;
+      --color-border:        #CBD5E1;
+      --color-code-bg:       #F6F8FA;
+      --color-code-fg:       #1F2328;
+      --color-code-border:   #D0D7DE;
+      --color-text:          #1C1C1E;
+      --color-text-muted:    #5A6474;
+    }
+
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      font-size: 11pt;
+      color: var(--color-text);
+      background: var(--color-bg);
+      line-height: 1.6;
+    }
+
+    /* ── Page wrapper ── */
+    .page {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 48px 60px;
+      background: var(--color-surface);
+    }
+
+    /* ── Document Header ── */
+    .doc-header {
+      border-bottom: 3px solid var(--color-primary);
+      padding-bottom: 16px;
+      margin-bottom: 28px;
+    }
+
+    .doc-header .institution {
+      font-size: 9pt;
+      font-weight: 500;
+      color: var(--color-text-muted);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .doc-header .course-code {
+      font-size: 10pt;
+      font-weight: 600;
+      color: var(--color-primary-light);
+      margin-bottom: 6px;
+    }
+
+    .doc-header h1 {
+      font-size: 22pt;
+      font-weight: 700;
+      color: var(--color-primary);
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin-bottom: 4px;
+    }
+
+    .doc-header .subtitle {
+      font-size: 11pt;
+      font-weight: 400;
+      color: var(--color-text-muted);
+    }
+
+    /* ── Meta table ── */
+    .meta-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 28px;
+      font-size: 10pt;
+    }
+
+    .meta-table td {
+      padding: 5px 10px;
+      border: 1px solid var(--color-border);
+    }
+
+    .meta-table td:first-child {
+      font-weight: 600;
+      color: var(--color-primary);
+      background: var(--color-surface-alt);
+      width: 160px;
+    }
+
+    /* ── Student info ── */
+    .student-info-box {
+      border: 1.5px solid var(--color-border);
+      border-radius: 6px;
+      padding: 14px 18px;
+      margin-bottom: 28px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 24px;
+    }
+
+    .student-info-box .info-field {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .student-info-box .info-field label {
+      font-size: 8pt;
+      font-weight: 600;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .student-info-box .info-field .write-line {
+      border-bottom: 1.5px solid var(--color-border);
+      min-height: 22px;
+      width: 100%;
+    }
+
+    /* ── Overview box ── */
+    .overview-box {
+      background: var(--color-primary-pale);
+      border-left: 4px solid var(--color-primary);
+      border-radius: 0 6px 6px 0;
+      padding: 12px 16px;
+      margin-bottom: 28px;
+    }
+
+    .overview-box .overview-title {
+      font-size: 9pt;
+      font-weight: 700;
+      color: var(--color-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 5px;
+    }
+
+    .overview-box p {
+      font-size: 10pt;
+      color: var(--color-primary);
+      line-height: 1.5;
+      margin-bottom: 0;
+    }
+
+    /* ── Part headers ── */
+    .part-header {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      background: var(--color-primary);
+      color: #fff;
+      padding: 9px 16px;
+      border-radius: 6px 6px 0 0;
+      margin-top: 32px;
+      margin-bottom: 0;
+    }
+
+    .part-header .part-label {
+      font-size: 9pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      opacity: 0.8;
+    }
+
+    .part-header .part-title {
+      font-size: 13pt;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .part-header .part-points {
+      margin-left: auto;
+      font-size: 9pt;
+      font-weight: 600;
+      background: rgba(255,255,255,0.15);
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
+
+    /* ── Part body ── */
+    .part-body {
+      border: 1.5px solid var(--color-border);
+      border-top: none;
+      border-radius: 0 0 6px 6px;
+      padding: 20px 20px 24px;
+      margin-bottom: 8px;
+    }
+
+    .part-body p {
+      font-size: 10.5pt;
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+
+    .part-body p:last-child { margin-bottom: 0; }
+
+    /* ── Section labels inside parts ── */
+    .item-label {
+      font-size: 10pt;
+      font-weight: 700;
+      color: var(--color-primary);
+      margin-top: 18px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .item-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--color-primary-pale);
+    }
+
+    /* ── Code blocks ── */
+    .code-block {
+      background: var(--color-code-bg);
+      border: 1px solid var(--color-code-border);
+      border-radius: 6px;
+      padding: 12px 16px;
+      margin-bottom: 10px;
+      overflow-x: auto;
+    }
+
+    .code-block pre {
+      font-family: 'Fira Code', monospace;
+      font-size: 9.5pt;
+      line-height: 1.65;
+      color: var(--color-code-fg);
+      white-space: pre;
+      tab-size: 4;
+      margin: 0;
+    }
+
+    .code-block .code-caption {
+      font-size: 8.5pt;
+      font-weight: 600;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+
+    /* ── Answer boxes ── */
+    .answer-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 2fr;
+      gap: 0;
+      border: 1.5px solid var(--color-border);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      font-size: 9.5pt;
+    }
+
+    .answer-grid .ag-header {
+      background: var(--color-surface-alt);
+      font-weight: 700;
+      font-size: 8.5pt;
+      color: var(--color-primary);
+      padding: 7px 10px;
+      border-bottom: 1.5px solid var(--color-border);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .answer-grid .ag-cell {
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--color-border);
+      border-right: 1px solid var(--color-border);
+      min-height: 70px;
+      vertical-align: top;
+    }
+
+    .answer-grid .ag-cell:last-child {
+      border-right: none;
+    }
+
+    .answer-grid .ag-header:last-child {
+      border-right: none;
+    }
+
+    .answer-grid .ag-row:last-child .ag-cell {
+      border-bottom: none;
+    }
+
+    .answer-grid .fragment-label {
+      font-size: 8.5pt;
+      font-weight: 600;
+      color: var(--color-text-muted);
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    /* ── Write lines ── */
+    .write-area {
+      border-bottom: 1.5px solid var(--color-border);
+      min-height: 22px;
+      width: 100%;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .write-area-tall {
+      border: 1.5px solid var(--color-border);
+      border-radius: 4px;
+      width: 100%;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    /* ── Diagram frames ── */
+    .diagram-frame {
+      border: 1.5px dashed var(--color-border);
+      border-radius: 6px;
+      background: #fff;
+      min-height: 130px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-text-muted);
+      font-size: 9pt;
+      font-style: italic;
+      margin-bottom: 10px;
+      opacity: 0.8;
+    }
+
+    .diagram-frame.tall { min-height: 180px; }
+    .diagram-frame.short { min-height: 90px; }
+
+    /* ── Linked list starting diagram ── */
+    .ll-diagram {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      padding: 18px 16px;
+      background: var(--color-surface-alt);
+      border: 1.5px solid var(--color-border);
+      border-radius: 6px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .ll-node {
+      display: flex;
+      align-items: stretch;
+      border: 2px solid var(--color-primary);
+      border-radius: 4px;
+      font-family: 'Fira Code', monospace;
+      font-size: 10pt;
+      font-weight: 600;
+      overflow: hidden;
+    }
+
+    .ll-node .ll-data {
+      background: var(--color-primary-pale);
+      color: var(--color-primary);
+      padding: 6px 10px;
+      border-right: 2px solid var(--color-primary);
+      min-width: 36px;
+      text-align: center;
+    }
+
+    .ll-node .ll-next {
+      background: #fff;
+      color: var(--color-text-muted);
+      padding: 6px 8px;
+      font-size: 9pt;
+    }
+
+    .ll-arrow {
+      font-size: 14pt;
+      color: var(--color-primary);
+      font-weight: 700;
+      align-self: center;
+      margin: 0 2px;
+    }
+
+    .ll-null {
+      font-family: 'Fira Code', monospace;
+      font-size: 9.5pt;
+      font-weight: 600;
+      color: var(--color-danger);
+      align-self: center;
+      padding: 0 4px;
+    }
+
+    /* ── Head pointer label ── */
+    .ll-head-label {
+      font-size: 8.5pt;
+      font-weight: 700;
+      color: var(--color-accent);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    /* ── Operation steps ── */
+    .op-step {
+      border: 1.5px solid var(--color-border);
+      border-radius: 6px;
+      margin-bottom: 14px;
+      overflow: hidden;
+    }
+
+    .op-step-header {
+      background: var(--color-surface-alt);
+      padding: 7px 14px;
+      border-bottom: 1.5px solid var(--color-border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .op-step-header .op-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      background: var(--color-primary);
+      color: #fff;
+      border-radius: 50%;
+      font-size: 8pt;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .op-step-header .op-desc {
+      font-size: 10pt;
+      font-weight: 600;
+      color: var(--color-primary);
+    }
+
+    .op-step-body {
+      padding: 14px 14px 16px;
+    }
+
+    .op-step-body .instruction {
+      font-size: 9.5pt;
+      color: var(--color-text-muted);
+      margin-bottom: 10px;
+      font-style: italic;
+    }
+
+    /* ── Comparison table (Part C) ── */
+    .comp-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 10pt;
+      margin-top: 14px;
+    }
+
+    .comp-table th {
+      background: var(--color-primary);
+      color: #fff;
+      padding: 8px 12px;
+      text-align: left;
+      font-size: 9.5pt;
+      font-weight: 600;
+    }
+
+    .comp-table th:not(:first-child) {
+      text-align: center;
+    }
+
+    .comp-table tr:nth-child(even) td {
+      background: var(--color-surface-alt);
+    }
+
+    .comp-table td {
+      padding: 9px 12px;
+      border: 1px solid var(--color-border);
+      font-size: 10pt;
+    }
+
+    .comp-table td:not(:first-child) {
+      text-align: center;
+      min-width: 160px;
+    }
+
+    .comp-table td:first-child {
+      font-weight: 500;
+    }
+
+    .comp-table .answer-cell {
+      background: #fff;
+      min-width: 160px;
+    }
+
+    /* ── Grading rubric ── */
+    .rubric-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 10pt;
+      margin-top: 14px;
+    }
+
+    .rubric-table th {
+      background: var(--color-primary);
+      color: #fff;
+      padding: 7px 12px;
+      text-align: left;
+      font-size: 9pt;
+    }
+
+    .rubric-table th:last-child { text-align: right; }
+
+    .rubric-table td {
+      padding: 7px 12px;
+      border: 1px solid var(--color-border);
+      font-size: 9.5pt;
+    }
+
+    .rubric-table td:last-child { text-align: right; font-weight: 600; }
+
+    .rubric-table tr:nth-child(even) td { background: var(--color-surface-alt); }
+
+    .rubric-table .rubric-total td {
+      background: var(--color-primary-pale);
+      font-weight: 700;
+      color: var(--color-primary);
+      border-top: 2px solid var(--color-primary);
+    }
+
+    /* ── Instruction callout ── */
+    .instruction-callout {
+      background: var(--color-accent-light);
+      border-left: 4px solid var(--color-accent);
+      border-radius: 0 4px 4px 0;
+      padding: 10px 14px;
+      margin-bottom: 14px;
+      font-size: 9.5pt;
+      color: var(--color-warning);
+    }
+
+    .instruction-callout strong { color: var(--color-warning); }
+
+    /* ── Part divider ── */
+    .section-divider {
+      margin: 36px 0 28px;
+      border: none;
+      border-top: 2px solid var(--color-primary-pale);
+    }
+
+    /* ── Footer ── */
+    .doc-footer {
+      margin-top: 48px;
+      border-top: 1.5px solid var(--color-border);
+      padding-top: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      font-size: 8pt;
+      color: var(--color-text-muted);
+    }
+
+    .doc-footer .footer-left { line-height: 1.6; }
+    .doc-footer .footer-right { text-align: right; line-height: 1.6; }
+
+    /* ── Points badge ── */
+    .points-badge {
+      display: inline-block;
+      background: var(--color-accent-light);
+      color: var(--color-accent);
+      border: 1px solid var(--color-accent);
+      border-radius: 4px;
+      font-size: 8pt;
+      font-weight: 700;
+      padding: 1px 6px;
+      margin-left: 6px;
+    }
+
+    /* ── Print styles ── */
+    @media print {
+      body { background: #fff; font-size: 10pt; }
+      .page { padding: 0; max-width: 100%; box-shadow: none; }
+      .diagram-frame { border-style: dashed; }
+      .part-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .part-body { page-break-inside: avoid; }
+      .op-step { page-break-inside: avoid; }
+    }
+
+    @page {
+      size: A4;
+      margin: 18mm 18mm 18mm 18mm;
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ── Document Header ── -->
+  <header class="doc-header">
+    <div class="institution">Visayas State University · Department of Computer Science and Technology</div>
+    <div class="course-code">CSIT 103 — Data Structures and Algorithms &nbsp;·&nbsp; AY 2026–2027, 1st Semester</div>
+    <h1>TLA 1 — Structure Trace</h1>
+    <div class="subtitle">Lesson 1: Arrays and Linked Lists &nbsp;·&nbsp; Module 1 (Weeks 2–5)</div>
+  </header>
+
+  <!-- ── Meta Table ── -->
+  <table class="meta-table">
+    <tr>
+      <td>Learning Outcomes</td>
+      <td>LO 1.1, LO 1.2, LO 1.3, LO 1.4</td>
+    </tr>
+    <tr>
+      <td>Course Outcome</td>
+      <td>CO1</td>
+    </tr>
+    <tr>
+      <td>Total Points</td>
+      <td><strong>44 points</strong></td>
+    </tr>
+    <tr>
+      <td>Submission</td>
+      <td>Upload a clear photograph or PDF of the completed worksheet to the designated assignment on the VSU E-Learning Portal.</td>
+    </tr>
+    <tr>
+      <td>Allowed Materials</td>
+      <td>Pen and paper, or any text editor, word processor, or drawing tool.</td>
+    </tr>
+  </table>
+
+  <!-- ── Student Info ── -->
+  <div class="student-info-box">
+    <div class="info-field">
+      <label>Last Name, First Name, M.I.</label>
+      <div class="write-line"></div>
+    </div>
+    <div class="info-field">
+      <label>Student ID</label>
+      <div class="write-line"></div>
+    </div>
+    <div class="info-field">
+      <label>Offering Number</label>
+      <div class="write-line"></div>
+    </div>
+    <div class="info-field">
+      <label>Date Submitted</label>
+      <div class="write-line"></div>
+    </div>
+  </div>
+
+  <!-- ── Overview ── -->
+  <div class="overview-box">
+    <div class="overview-title">Overview</div>
+    <p>
+      This exercise has three parts. <strong>Part A</strong> asks you to annotate the time and space complexity of five C++ code fragments using Big-O notation, plus a one-sentence justification for each. <strong>Part B</strong> asks you to trace four operations on a singly linked list by drawing pointer diagrams. <strong>Part C</strong> asks you to complete a complexity comparison table for arrays versus singly linked lists.
+    </p>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       PART A — Array Operations
+  ═══════════════════════════════════════════════════════════ -->
+  <div class="part-header">
+    <span class="part-label">Part A</span>
+    <span class="part-title">Array Operations — Complexity Annotation</span>
+    <span class="part-points">20 pts</span>
+  </div>
+  <div class="part-body">
+    <p>
+      Five C++ code fragments are given below. For each fragment, write the <strong>Big-O time complexity</strong>, the <strong>Big-O space complexity</strong>, and a <strong>one-sentence justification</strong> that references the dominant operation or loop structure. Assume the array contains <em>n</em> elements.
+    </p>
+    <div class="instruction-callout">
+      <strong>Instruction:</strong> Write your answers in the shaded answer rows directly below each code fragment. Justify by referencing loops, recursion depth, or auxiliary memory as appropriate.
+    </div>
+
+    <!-- Fragment 1 -->
+    <div class="item-label">Fragment 1 — Direct Access <span class="points-badge">4 pts</span></div>
+    <div class="code-block">
+      <div class="code-caption">C++ · Fragment 1</div>
+      <pre>int getElement(int arr[], int i) {
+    return arr[i];
+}</pre>
+    </div>
+    <div class="answer-grid">
+      <div class="ag-header">Time Complexity</div>
+      <div class="ag-header">Space Complexity</div>
+      <div class="ag-header">One-Sentence Justification</div>
+      <div class="ag-row" style="display: contents;">
+        <div class="ag-cell answer-cell">&nbsp;</div>
+        <div class="ag-cell answer-cell">&nbsp;</div>
+        <div class="ag-cell answer-cell">&nbsp;</div>
+      </div>
+    </div>
+
+    <!-- Fragment 2 -->
+    <div class="item-label">Fragment 2 — Linear Search <span class="points-badge">4 pts</span></div>
+    <div class="code-block">
+      <div class="code-caption">C++ · Fragment 2</div>
+      <pre>int linearSearch(int arr[], int n, int target) {
+    for (int i = 0; i &lt; n; i++) {
+        if (arr[i] == target)
+            return i;
+    }
+    return -1;
+}</pre>
+    </div>
+    <div class="answer-grid">
+      <div class="ag-header">Time Complexity</div>
+      <div class="ag-header">Space Complexity</div>
+      <div class="ag-header">One-Sentence Justification</div>
+      <div class="ag-row" style="display: contents;">
+        <div class="ag-cell answer-cell">&nbsp;</div>
+        <div class="ag-cell answer-cell">&nbsp;</div>
+        <div class="ag-cell answer-cell">&nbsp;</div>
+      </div>
+    </div>
+
+    <!-- Fragment 3 -->
+    <div class="item-label">Fragment 3 — Insert at Index <span class="points-badge">4 pts</span></div>
+    <div class="code-block">
+      <div class="code-caption">C++ · Fragment 3</div>
+      <pre>void insertAt(int arr[], int &amp;n, int idx, int val) {
+    for (int i = n; i &gt; idx; i--)
+        arr[i] = arr[i - 1];
+    arr[idx] = val;
+    n++;
+}</pre>
+    </div>
+    <div class="answer-grid">
+      <div class="ag-header">Time Complexity</div>
+      <div class="ag-header">Space Complexity</div>
+      <div class="ag-header">One-Sentence Justification</div>
+      <div class="ag-row" style="display: contents;">
+        <div class="ag-cell answer-cell">&nbsp;</div>
+        <div class="ag-cell answer-cell">&nbsp;</div>
+        <div class="ag-cell answer-cell">&nbsp;</div>
+      </div>
+    </div>
+
+    <!-- Fragment 4 -->
+    <div class="item-label">Fragment 4 — Delete by Shifting <span class="points-badge">4 pts</span></div>
+    <div class="code-block">
+      <div class="code-caption">C++ · Fragment 4</div>
+      <pre>void deleteAt(int arr[], int &amp;n, int idx) {
+    for (int i = idx; i &lt; n - 1; i++)
+        arr[i] = arr[i + 1];
+    n--;
+}</pre>
+    </div>
+    <div class="answer-grid">
+      <div class="ag-header">Time Complexity</div>
+      <div class="ag-header">Space Complexity</div>
+      <div class="ag-header">One-Sentence Justification</div>
+      <div class="ag-row" style="display: contents;">
+        <div class="ag-cell answer-cell">&nbsp;</div>
+        <div class="ag-cell answer-cell">&nbsp;</div>
+        <div class="ag-cell answer-cell">&nbsp;</div>
+      </div>
+    </div>
+
+    <!-- Fragment 5 -->
+    <div class="item-label">Fragment 5 — Nested-Loop Comparison <span class="points-badge">4 pts</span></div>
+    <div class="code-block">
+      <div class="code-caption">C++ · Fragment 5</div>
+      <pre>bool hasDuplicate(int arr[], int n) {
+    for (int i = 0; i &lt; n; i++)
+        for (int j = i + 1; j &lt; n; j++)
+            if (arr[i] == arr[j])
+                return true;
+    return false;
+}</pre>
+    </div>
+    <div class="answer-grid">
+      <div class="ag-header">Time Complexity</div>
+      <div class="ag-header">Space Complexity</div>
+      <div class="ag-header">One-Sentence Justification</div>
+      <div class="ag-row" style="display: contents;">
+        <div class="ag-cell answer-cell">&nbsp;</div>
+        <div class="ag-cell answer-cell">&nbsp;</div>
+        <div class="ag-cell answer-cell">&nbsp;</div>
+      </div>
+    </div>
+  </div><!-- /part-body Part A -->
+
+  <!-- ══════════════════════════════════════════════════════
+       PART B — Linked List Operations
+  ═══════════════════════════════════════════════════════════ -->
+  <div class="part-header">
+    <span class="part-label">Part B</span>
+    <span class="part-title">Linked List Operations — Pointer Diagrams</span>
+    <span class="part-points">12 pts</span>
+  </div>
+  <div class="part-body">
+    <p>
+      The singly linked list below contains <strong>6 nodes</strong>. Perform each of the four operations in order — each operation is applied to the result of the previous one. After each operation, <strong>draw the resulting list state</strong> in the blank diagram frame provided. Show all pointer changes clearly, including the <code>head</code> pointer and any <code>NULL</code> termination.
+    </p>
+
+    <!-- Starting state -->
+    <div class="item-label">Starting State</div>
+    <div style="margin-bottom: 6px;">
+      <span class="ll-head-label">head</span>
+    </div>
+    <div class="ll-diagram">
+      <div class="ll-node">
+        <div class="ll-data">10</div>
+        <div class="ll-next">next</div>
+      </div>
+      <div class="ll-arrow">→</div>
+      <div class="ll-node">
+        <div class="ll-data">20</div>
+        <div class="ll-next">next</div>
+      </div>
+      <div class="ll-arrow">→</div>
+      <div class="ll-node">
+        <div class="ll-data">30</div>
+        <div class="ll-next">next</div>
+      </div>
+      <div class="ll-arrow">→</div>
+      <div class="ll-node">
+        <div class="ll-data">40</div>
+        <div class="ll-next">next</div>
+      </div>
+      <div class="ll-arrow">→</div>
+      <div class="ll-node">
+        <div class="ll-data">50</div>
+        <div class="ll-next">next</div>
+      </div>
+      <div class="ll-arrow">→</div>
+      <div class="ll-node">
+        <div class="ll-data">60</div>
+        <div class="ll-next">next</div>
+      </div>
+      <div class="ll-arrow">→</div>
+      <div class="ll-null">NULL</div>
+    </div>
+
+    <div class="instruction-callout">
+      <strong>Instruction:</strong> Draw each diagram in the blank frame below each operation. Show the full list — from <code>head</code> to <code>NULL</code> — after the operation is applied. Clearly indicate the <code>head</code> pointer and any redirected pointers.
+    </div>
+
+    <!-- Operation 1 -->
+    <div class="op-step">
+      <div class="op-step-header">
+        <span class="op-number">1</span>
+        <span class="op-desc">Insert at head — insert the value <strong>5</strong> as the new first node</span>
+        <span class="points-badge" style="margin-left:auto;">3 pts</span>
+      </div>
+      <div class="op-step-body">
+        <div class="instruction">Draw the list state after inserting 5 at the head. Show where <code>head</code> now points and how the new node links to the former first node.</div>
+        <div class="diagram-frame tall">Draw your pointer diagram here.</div>
+      </div>
+    </div>
+
+    <!-- Operation 2 -->
+    <div class="op-step">
+      <div class="op-step-header">
+        <span class="op-number">2</span>
+        <span class="op-desc">Insert at tail — insert the value <strong>70</strong> as the new last node</span>
+        <span class="points-badge" style="margin-left:auto;">3 pts</span>
+      </div>
+      <div class="op-step-body">
+        <div class="instruction">Draw the list state after inserting 70 at the tail. Show that the former last node's <code>next</code> now points to the new node, and the new node's <code>next</code> is NULL.</div>
+        <div class="diagram-frame tall">Draw your pointer diagram here.</div>
+      </div>
+    </div>
+
+    <!-- Operation 3 -->
+    <div class="op-step">
+      <div class="op-step-header">
+        <span class="op-number">3</span>
+        <span class="op-desc">Delete middle node — delete the node with value <strong>30</strong></span>
+        <span class="points-badge" style="margin-left:auto;">3 pts</span>
+      </div>
+      <div class="op-step-body">
+        <div class="instruction">Draw the list state after deleting the node containing 30. Show the node preceding it now pointing directly to the node that followed 30. Cross out the deleted node.</div>
+        <div class="diagram-frame tall">Draw your pointer diagram here.</div>
+      </div>
+    </div>
+
+    <!-- Operation 4 -->
+    <div class="op-step">
+      <div class="op-step-header">
+        <span class="op-number">4</span>
+        <span class="op-desc">Traverse — list all node values in order from head to tail</span>
+        <span class="points-badge" style="margin-left:auto;">3 pts</span>
+      </div>
+      <div class="op-step-body">
+        <div class="instruction">Starting from <code>head</code>, follow each <code>next</code> pointer until NULL. Write the values visited in the order they are encountered.</div>
+        <div style="margin-top: 10px;">
+          <p style="font-size:9.5pt; font-weight:600; color: var(--color-primary); margin-bottom:8px;">Traversal order (write node values separated by →):</p>
+          <div style="border-bottom: 1.5px solid var(--color-border); min-height: 28px; width: 100%;"></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /part-body Part B -->
+
+  <!-- ══════════════════════════════════════════════════════
+       PART C — Complexity Comparison Table
+  ═══════════════════════════════════════════════════════════ -->
+  <div class="part-header">
+    <span class="part-label">Part C</span>
+    <span class="part-title">Complexity Comparison — Arrays vs. Singly Linked Lists</span>
+    <span class="part-points">12 pts</span>
+  </div>
+  <div class="part-body">
+    <p>
+      Six operations are listed in the table below. For each operation, fill in the <strong>time complexity</strong> (Big-O) for both an <strong>array</strong> and a <strong>singly linked list</strong> (without a tail pointer unless stated). Assume a list or array of size <em>n</em>.
+    </p>
+    <div class="instruction-callout">
+      <strong>Instruction:</strong> Write the Big-O expression (e.g., O(1), O(n)) in each blank cell. Consider the worst-case scenario for each operation.
+    </div>
+
+    <table class="comp-table">
+      <thead>
+        <tr>
+          <th style="width: 42%;">Operation</th>
+          <th style="width: 29%;">Array</th>
+          <th style="width: 29%;">Singly Linked List</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1. Access element by index</td>
+          <td class="answer-cell">&nbsp;</td>
+          <td class="answer-cell">&nbsp;</td>
+        </tr>
+        <tr>
+          <td>2. Search for a value (unsorted)</td>
+          <td class="answer-cell">&nbsp;</td>
+          <td class="answer-cell">&nbsp;</td>
+        </tr>
+        <tr>
+          <td>3. Insert at the beginning</td>
+          <td class="answer-cell">&nbsp;</td>
+          <td class="answer-cell">&nbsp;</td>
+        </tr>
+        <tr>
+          <td>4. Insert at the end</td>
+          <td class="answer-cell">&nbsp;</td>
+          <td class="answer-cell">&nbsp;</td>
+        </tr>
+        <tr>
+          <td>5. Insert at a given position <em>i</em></td>
+          <td class="answer-cell">&nbsp;</td>
+          <td class="answer-cell">&nbsp;</td>
+        </tr>
+        <tr>
+          <td>6. Delete at a given position <em>i</em></td>
+          <td class="answer-cell">&nbsp;</td>
+          <td class="answer-cell">&nbsp;</td>
+        </tr>
+      </tbody>
+    </table>
+  </div><!-- /part-body Part C -->
+
+  <!-- ══════════════════════════════════════════════════════
+       GRADING RUBRIC
+  ═══════════════════════════════════════════════════════════ -->
+  <hr class="section-divider">
+  <h2 style="font-size: 12pt; font-weight: 700; color: var(--color-primary); margin-bottom: 10px;">Grading Rubric</h2>
+
+  <table class="rubric-table">
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th style="text-align:right;">Points</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Part A — Correct time complexity (5 fragments × 2 pts)</td>
+        <td>10 pts</td>
+      </tr>
+      <tr>
+        <td>Part A — Correct space complexity (5 fragments × 1 pt)</td>
+        <td>5 pts</td>
+      </tr>
+      <tr>
+        <td>Part A — One-sentence justification (5 fragments × 1 pt)</td>
+        <td>5 pts</td>
+      </tr>
+      <tr>
+        <td>Part B — Correct linked list state after each operation (4 operations × 3 pts)</td>
+        <td>12 pts</td>
+      </tr>
+      <tr>
+        <td>Part C — Correct comparison table (6 operations × 2 structures × 1 pt)</td>
+        <td>12 pts</td>
+      </tr>
+      <tr class="rubric-total">
+        <td><strong>Total</strong></td>
+        <td><strong>44 pts</strong></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ── Document Footer ── -->
+  <footer class="doc-footer">
+    <div class="footer-left">
+      CSIT 103 · TLA 1 — Structure Trace<br>
+      Lesson 1: Arrays and Linked Lists · Module 1
+    </div>
+    <div class="footer-right">
+      Prepared by: Jomari Joseph A. Barrera, Assistant Professor 1, DCST, VSU<br>
+      AY 2026–2027, 1st Semester
+    </div>
+  </footer>
+
+</div><!-- /page -->
+</body>
+</html>

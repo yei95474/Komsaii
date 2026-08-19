@@ -1,47 +1,35 @@
+# Komsaii Repository Map
 
-# GDRIVE LINKS
+This repo is organized as `year -> subject -> category`.
 
-**Fern Prog1** - *https://drive.google.com/drive/folders/1wJ-4xsunauPoXayF56tOPFnooXndswOS?usp=drive_link*
+## Top-level layout
 
-**Fern Prog1.5-2** - *https://drive.google.com/drive/folders/16TbotwTFFM8_OC58Km0uWeqc3GixEntL?usp=drive_link*
+- `first-year/` - first-year work, grouped by subject
+- `second-year/` - second-year work, grouped by subject
+- `archive/legacy/` - old content kept for history only
+- `reference/` - reusable config, editor, and support files
+- `jsons/` - active editor/task configuration
 
-**1stYear(Seniors)** - *https://drive.google.com/drive/folders/1zCyN4MphTAtW0jO47uCXyPcAnGjtpD63?usp=drive_link*
+## Current subjects
 
-**Gen Ed Courses(Relearn)** - *https://drive.google.com/drive/folders/1j49uw2U52vKF5AwltPcazbBGloYV_QnC?usp=drive_link*
+- `first-year/foundational-programming/`
+- `second-year/data-structures/`
 
-**ComSCi and Programming(Relearn)** - *https://drive.google.com/drive/folders/1j49uw2U52vKF5AwltPcazbBGloYV_QnC?usp=drive_link*
+## Inside each subject
 
-**Programming Exercises(W3)** - *https://www.w3resource.com/c-programming-exercises/*
+- `learning-materials/` - lecture notes, PDFs, diagrams, mentorship packs, and reference reading
+- `practice-problems/` - solved and unsolved problem sets
+- `laboratories/` - lab work, sequential exercises, and coursework submissions
+- `demos/` - playgrounds, experiments, and short showcase code
 
-**Fundamentals of C Programming** - *https://gn.dronacharya.info/APSDept/Downloads/question_papers/ISem/CCP/unit-2/Fundamentals_C_programming.pdf*
+## Naming rules
 
-**Fundamentals of C++** - *https://gn.dronacharya.info/APSDept/Downloads/question_papers/ISem/CCP/unit-2/Fundamentals_C_programming.pdf*
-
----
-## Message 
-
-hello @everyone, again, if u want to practice visit this site, mao ni ang source na kuhaan ni sir regis, your goal is to **solve at least 10 problems before midterm**, bisag di makuha ang right answer na extreme, like bisag small cases lang kay ang project euler kay extreme cases man, big number
-*https://projecteuler.net/archives*
-
-however, if di pa ano sa concept sa c, just visit the **Playlist of neso academy**, they have a great **introduction of C programming** didto 
-*https://youtube.com/playlist?list=PLBlnK6fEyqRggZZgYpPMUxdY1CYkZtARR&si=SYDWq0YVkuygzthI*
-
-if you want to have a deeper understanding and wide perspective sa C, you can take the **CS50 Harvard course for introduction to CS**, actually, their **Week 1, 2 and 3** are pretty good intro sa C, esp if mag try mo ug solve solve sa ila mga problems aside sa watching videos, you can skip Week 0, since it's scratch man sad
-*https://pll.harvard.edu/course/cs50-introduction-computer-science*
-
-if you want practice problems na basic lang, like application sa concepts, you can try the W3resource
-*https://www.w3resource.com/c-programming-exercises/*
-
-if you want a **fun na programming exercise** you can visit these site, order from recommended to least,
-*https://www.hackerrank.com/domains/c*
-*https://codeforces.com/*
-*https://www.codewars.com/*
-*https://leetcode.com/*
-
-if you want some **codebase and practice code**, you can visit my github 
-*https://github.com/VSUrhuel/codeForces*
-
-guys, start practicing, start coding. yes, you need to be pressured and start studying as early as now, hangtod naa pa mo time to sleep 8 hours, start coding, **make it a hobby** na dapat every day maka code mo ug **at least 5 c problems**, ayaw mo ug sleep hangtod di mo ka solve sa usa c problem, make it a hobby jud
-
----
-
+- Use lowercase `kebab-case` for new folder names.
+- Prefer `year/subject/category/topic/item-name` paths.
+- Keep each folder name semantically specific.
+- Put finished exercises under `practice-problems/`.
+- Put classwork and required submissions under `laboratories/`.
+- Put explanatory material under `learning-materials/`.
+- Put experimental or scratch code under `demos/`.
+- Put dead or outdated material under `archive/legacy/`.
+- Do not keep compiler outputs in the repo tree. Discard generated `.exe`, `.o`, `.obj`, `.ilk`, `.pdb`, `.idb`, and similar build artifacts.
